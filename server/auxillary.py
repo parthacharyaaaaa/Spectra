@@ -63,7 +63,7 @@ def require_token(endpoint):
 
 def validate_CSV(endpoint):
     def decorated(*args, **kwargs):
-        CSV_FILE = request.files["csv_file"]
+        CSV_FILE = request.files.get("csv_file")
         if not CSV_FILE:
             raise BadRequest(f"Endpoint {request.root_path} requires a csv file to be sent")
         
