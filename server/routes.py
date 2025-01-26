@@ -41,14 +41,14 @@ def storeCSV():
     except:
         raise InternalServerError("There seems to be an issue on our side when saving CSV files. Please try again later :(")
     
-    supabaseClient.storage.from_(f"Data/{g.tkn['uid']}").upload(path = filename,
+    supabaseClient.storage.from_(f"Data/{request.headers.get("uuid")}").upload(path = filename,
                                                                                      file=tempPath,
                                                                                      file_options={'Content-Type': 'text/csv'})
     try:
         supabaseClient.from_("analysis").insert({
             "score": None,
             "file_name": filename,
-            "user_id": g.tkn["uid"],
+            "user_id": request.headers.get("uuid"),
             "category": None
         }).execute()
 
@@ -56,17 +56,16 @@ def storeCSV():
         
         supabaseClient.from_("users").update({
             "records": newRecord
-        }).eq("user_id", g.tkn["uid"]).execute()
+        }).eq("user_id", request.headers.get("uuid")).execute()
     except:
         os.remove(tempPath)
         raise InternalServerError("There seems to be an issue our Supabase integration, please try again later :(")
     
     os.remove(tempPath)
 
-    return jsonify({"user" : g.tkn["uid"],
+    return jsonify({"user" : request.headers.get("uuid"),
                     "epoch" : datetime.strftime(epoch, "%H:%M:%S, %d/%m/%y"),
                     "sb_filename" : filename}), 201
-
 @app.route("/analyze/<string:filename>", methods=["GET"])
 @require_token
 def analyze(filename : str):
@@ -77,7 +76,7 @@ def analyze(filename : str):
         raise BadRequest("Analysis requires filepath param to be a .csv file")
         
     try:
-        response : bytes = supabaseClient.storage.from_(f"Data/{g.tkn['uid']}").download(filename)
+        response : bytes = supabaseClient.storage.from_(f"Data/{request.headers.get('uuid')}").download(filename)
         idx = response.index(b'Date')
         response = response[idx:]
         idx = response.index(b'--')
@@ -87,7 +86,7 @@ def analyze(filename : str):
     except Exception as e:
         raise NotFound(f"The given filename could not be located in your bucket: {str(e)}")
     
-    tempFilepath = os.path.join(app.static_folder, f"{g.tkn['uid']}_/{filename}")
+    tempFilepath = os.path.join(app.static_folder, f"{request.headers.get('uuid')}_/{filename}")
     with open(tempFilepath, "wb") as tempFile:
         tempFile.write(response)
         df = pd.read_csv(tempFilepath)
@@ -96,7 +95,7 @@ def analyze(filename : str):
     # ML logic here
     try:
         identifier = uuid4().hex
-        basepath = os.path.join(app.config["GRAPHS_DIR"], f"temp_{g.tkn['uid']}_{filename[:-4]}")
+        basepath = os.path.join(app.config["GRAPHS_DIR"], f"temp_{request.headers.get('uuid')}_{filename[:-4]}")
         paths : dict ={}
 
         anomalyDetector = AnomalyDetection(basepath, identifier)
@@ -115,7 +114,7 @@ def analyze(filename : str):
 
         for k, v in paths.items():
             print("Bucket:",k,"Other:",v)
-            supabaseClient.storage.from_(f"Plots/0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0").upload(path=k+".png",
+            supabaseClient.storage.from_(f"Plots/{request.headers.get('uuid')}").upload(path=k+".png",
                                                                                               file=v,
                                                                                               file_options={"content-type" : "image/png"})
     except Exception as e:
@@ -126,7 +125,7 @@ def analyze(filename : str):
         for graphPath in paths.values():
             os.remove(graphPath)
 
-    return jsonify([f"Plots/0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0/{bucketPath}" for bucketPath in paths.keys()]), 200
+    return jsonify([f"Plots/{request.headers.get('uuid')}_/{bucketPath}" for bucketPath in paths.keys()]), 200
 
 # @app.route("/keys/rotate", methods=["POST"])
 # # @private

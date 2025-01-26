@@ -32,10 +32,12 @@ def enforce_JSON(endpoint):
     return decorated
 
 def require_token(endpoint):
+    
     @wraps(endpoint)
     def decorated(*args, **kwargs):
         global RESPONSE_METADATA
-        encodedToken : str = request.headers.get("Authorization", request.headers.get("authorization", None))
+        encodedToken : str = request.headers.get("Authorization", request.headers.get("authorization", None)).split(" ")[1]
+        print(encodedToken)
         if not encodedToken:
             exc = Unauthorized("Endpoint {} requires authentication to be accessed")
             exc.__setattr__("kwargs", {"additional" : "Please login to access this endpoint. If you don't have an account, please sign up",
@@ -49,11 +51,18 @@ def require_token(endpoint):
                                                key=key,
                                                verify=True,
                                                leeway=current_app.config["JWT_LEEWAY"],
-                                               algorithms=["HS256"])
+                                               algorithms=["HS256"],
+                                               options={"verify_aud": False})
                 g.tkn = tkn
                 isValid = True
                 break
             except jwt.PyJWTError:
+                print(jwt.decode(encodedToken,
+                                 key=key,
+                                 verify=False,
+                                 leeway=current_app.config["JWT_LEEWAY"],
+                                 algorithms=["HS256"],
+                                 options={"verify_aud": False}))
                 continue
         
         if not isValid:
