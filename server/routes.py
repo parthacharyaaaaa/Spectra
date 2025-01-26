@@ -22,7 +22,7 @@ def storeCSV():
     epoch = datetime.now()
     filename = f"{g.CSV_FILE}_{epoch.strftime('%H%M%S%d%m%y')}_{uuid4.hex}.csv"
 
-    response = supabaseClient.storage().from_(g.tkn["sub"]).upload(filename)
+    response = supabaseClient.storage.from_(g.tkn["sub"]).upload(filename)
     if response.get("error"):
         raise InternalServerError(f"Error uploading file: {response['error']}")
     
@@ -46,4 +46,4 @@ def storeCSV():
 
     return jsonify({"user" : g.tkn["sub"],
                     "epoch" : datetime.strftime(epoch, "%H:%M:%S, %d/%m/%y"),
-                    "sb_filename" : filename}), 200
+                    "sb_filename" : filename}), 201
