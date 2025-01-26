@@ -1,14 +1,21 @@
+### Project classes ###
 from server import app, supabaseClient
 
+### Flask and Werkzeug dependencies ###
 from flask import Response, jsonify, g
 from werkzeug.exceptions import BadRequest, InternalServerError, NotFound
 
+### Data transformation and CSV-assosciated functions ###
 import pandas as pd
-# import pickle         Fuck this lil nigga
 
+### Models ###
 from server.FraudDetect import AnomalyDetection
+from server.summary import Summary
+
+### Custom decorators ###
 from server.auxillary import validate_CSV, enforce_JSON, require_token
 
+### Standard library ###
 from datetime import datetime
 from uuid import uuid4
 import os
@@ -74,8 +81,12 @@ def analyze(filename : str):
 
 
     # ML logic here
-    # model = AnomalyDetection()
-    # model.run(pd.read_csv("server/output.csv"))
+    anomalyDetector = AnomalyDetection()
+    anomalyDetector.run(pd.read_csv("server/output.csv"))
+
+    summarizer = Summary()
+    summarizer.start(pd.read_csv("server/output.csv"))
+    summarizer.runner()
 
     return jsonify([]), 200
 
