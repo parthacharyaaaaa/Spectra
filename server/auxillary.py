@@ -1,5 +1,6 @@
-from flask import request, g
+from flask import request, g, current_app
 from werkzeug.exceptions import BadRequest, Unauthorized
+import jwt
 
 RESPONSE_METADATA : dict = {
     "authorization" : ""
@@ -23,3 +24,37 @@ def enforce_JSON(endpoint):
         
         return endpoint(*args, **kwargs)
     return decorated
+
+def require_token(endpoint):
+    def decorated(*args, **kwargs):
+        global RESPONSE_METADATA
+        encodedToken : str = request.headers.get("Authorization", request.headers.get("authorization", None))
+        if not encodedToken:
+            exc = Unauthorized("Endpoint {} requires authentication to be accessed")
+            exc.__setattr__("kwargs", {"additional" : "Please login to access this endpoint. If you don't have an account, please sign up",
+                                       "auth" : RESPONSE_METADATA["authorization"]})
+            raise exc
+        
+        isValid : bool = False
+        for key in current_app.config["JWT_KEYS"]:
+            try:
+                tkn : dict | None = jwt.decode(encodedToken,
+                                               key=key,
+                                               verify=True,
+                                               leeway=current_app.config["JWT_LEEWAY"])
+                g.tkn = tkn
+                isValid = True
+                break
+            except jwt.PyJWTError:
+                continue
+        
+        if not isValid:
+            exc = Unauthorized("Invalid JWT")
+            exc.__setattr__("kwargs", {"additional" : "If you had logged in, please log in again in case your token has expired",
+                                    "auth" : RESPONSE_METADATA["authorization"]})
+            raise exc
+        
+        return endpoint(*args, **kwargs)
+    return decorated
+            
+                
