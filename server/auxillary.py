@@ -1,6 +1,7 @@
 from flask import request, g, current_app
 from werkzeug.exceptions import BadRequest, Unauthorized
 import jwt
+import sys
 
 RESPONSE_METADATA : dict = {
     "authorization" : ""
@@ -56,5 +57,19 @@ def require_token(endpoint):
         
         return endpoint(*args, **kwargs)
     return decorated
-            
-                
+
+def validate_CSV(endpoint):
+    def decorated(*args, **kwargs):
+        CSV_FILE = request.files["csv_file"]
+        if not CSV_FILE:
+            raise BadRequest(f"Endpoint {request.root_path} requires a csv file to be sent")
+        
+        if CSV_FILE[-4:].lower() != ".csv":
+            raise BadRequest("File must be in csv format")
+        
+        if sys.getsizeof(CSV_FILE) > current_app.config["MAX_CSV_SIZE"]:
+            raise BadRequest(f"Given file {CSV_FILE.name} needs to be less than {current_app.config['MAX_CSV_SIZE']} bytes in size")
+        
+        g.CSV_FILE = CSV_FILE
+        return endpoint(*args, **kwargs)
+    return decorated
