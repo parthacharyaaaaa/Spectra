@@ -11,7 +11,7 @@ from datetime import datetime
 from uuid import uuid4
 
 @app.route("/parse-csv", methods=["POST"])
-# @require_token
+@require_token
 @validate_CSV
 def storeCSV():
     try:
@@ -20,7 +20,7 @@ def storeCSV():
         raise BadRequest("CSV file could not be parsed properly. Ensure proper file format, size, encoding, and properly formatted columns.")
     
     epoch = datetime.now()
-    filename = f"{g.CSV_FILE}_{epoch.strftime('%H%M%S%d%m%y')}_{uuid4.hex}.csv"
+    filename = f"{g.CSV_FILE}_{epoch.strftime('%H%M%S%d%m%y')}_{uuid4().hex}.csv"
 
     response = supabaseClient.storage.from_(g.tkn["sub"]).upload(filename)
     if response.get("error"):
@@ -49,7 +49,7 @@ def storeCSV():
                     "sb_filename" : filename}), 201
 
 @app.route("/analyze/<string:filename>", methods=["GET"])
-@require_token
+# @require_token
 def analyze(filename : str):
     if not filename:
         raise BadRequest("Empty filename passed")

@@ -8,6 +8,7 @@ RESPONSE_METADATA : dict = {
 }
 
 def generic_error_handler(e : Exception):
+    print(e)
     response = {"message" : getattr(e, "description", "An error occured")}
     if getattr(e, "kwargs", None):
         response.update({k : v for k,v in e["kwargs"]})
@@ -64,7 +65,7 @@ def validate_CSV(endpoint):
         if not CSV_FILE:
             raise BadRequest(f"Endpoint {request.root_path} requires a csv file to be sent")
         
-        if CSV_FILE[-4:].lower() != ".csv":
+        if CSV_FILE.filename[-4:].lower() != ".csv":
             raise BadRequest("File must be in csv format")
         
         if sys.getsizeof(CSV_FILE) > current_app.config["MAX_CSV_SIZE"]:
