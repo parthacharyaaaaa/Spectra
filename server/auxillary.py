@@ -76,3 +76,15 @@ def validate_CSV(endpoint):
         g.CSV_FILE = CSV_FILE
         return endpoint(*args, **kwargs)
     return decorated
+
+def private(endpoint):
+    def decorated(*args, **kwargs):
+        authKey = request.headers.get("X-API-KEY")
+        if not authKey:
+            raise Unauthorized("API key absent")
+        
+        if authKey != current_app.config["SB_API_KEY"]:
+            raise Unauthorized("Invalid API key")
+        
+        return endpoint(*args, **kwargs)
+    return decorated
