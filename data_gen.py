@@ -90,4 +90,4 @@ gen : DataMaker = DataMaker(int(input("Enter profile: 1) Poor, 2) Middle-Class, 
 if gen.profile == 3:
     print("I hate rich niggas, goddamnit\nCause I ain't never had a lot, damnit")
 
-gen.generateEntries()
+gen.generateEntries(int(input("Enter No. of entries: ")))
