@@ -85,7 +85,7 @@ def analyze(filename : str):
     anomalyDetector.run(pd.read_csv("server/output.csv"))
 
     summarizer = Summary()
-    summarizer.start(pd.read_csv("server/output.csv"))
+    summarizer.start("server/output.csv")
     summarizer.runner()
 
     return jsonify([]), 200
