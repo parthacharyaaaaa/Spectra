@@ -26,8 +26,7 @@ CONFIG = {
     "SB_API_KEY" : os.environ["SUPABASE_KEY"],
     "MAX_ACTIVE_KEYS" : int(os.environ["MAX_ACTIVE_KEYS"]),
     "GRAPHS_DIR" : os.path.join(os.path.dirname(os.path.dirname(__file__)), os.environ["APP_GRAPHS_FOLDER"]),
-    "JWT_KEYS" : os.environ["JWT_KEYS"].split(","),
-    "JWT_LEEWAY" : int(os.environ["JWT_LEEWAY"])
+    "JWT_KEYS" : os.environ["JWT_KEYS"].split(",")
 }
 
 
