@@ -29,3 +29,5 @@ app.register_error_handler(Exception, generic_error_handler)
 ### Supabase setup ###
 from supabase import Client
 supabaseClient : Client = Client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_KEY"])
+
+from server import routes
