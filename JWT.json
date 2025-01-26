@@ -1,0 +1,11 @@
+{
+    "header" : {
+        "typ" : "JWT",
+        "alg" : "HS256"
+    },
+    "payload" : {
+        "uid" : "uuid",
+        "sub" : "username",
+        "exp" : "current time + 180 minutes. This will be in UNIX epoch format, to float value"
+    }
+}
