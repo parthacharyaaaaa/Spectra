@@ -36,7 +36,7 @@ def storeCSV():
     tempPath = os.path.join(app.static_folder, filename)
 
     try:
-        tempDf.to_csv(tempPath)
+        tempDf.to_csv(tempPath, index=False)
     except:
         raise InternalServerError("There seems to be an issue on our side when saving CSV files. Please try again later :(")
     
@@ -77,19 +77,36 @@ def analyze(filename : str):
         raise BadRequest("Analysis requires filepath param to be a .csv file")
         
     try:
-        response = supabaseClient.storage.from_("Data/0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0").download(filename)
+        response : bytes = supabaseClient.storage.from_("Data/0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0").download(filename)
+        idx = response.index(b'Date')
+        response = response[idx:]
+        idx = response.index(b'--')
+        response = response[:idx]
+    except ValueError as e:
+        raise InternalServerError()
     except Exception as e:
         raise NotFound(f"The given filename could not be located in your bucket: {str(e)}")
     
+    tempFilepath = os.path.join(app.static_folder, f"temp_0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0_{filename}")
+    with open(tempFilepath, "wb") as tempFile:
+        tempFile.write(response)
+        df = pd.read_csv(tempFilepath)
+        print(df.dtypes)
 
 
     # ML logic here
-    anomalyDetector = AnomalyDetection()
-    anomalyDetector.run(pd.read_csv("server/output.csv"))
+    try:
+        anomalyDetector = AnomalyDetection()
+        anomalyDetector.run(df)
 
-    summarizer = Summary()
-    summarizer.start("server/output.csv")
-    summarizer.runner()
+        summarizer = Summary()
+        summarizer.start(df)
+        summarizer.runner()
+    except:
+        raise InternalServerError("An error occured with our ML service :(")
+    finally:
+        # os.remove(tempFilepath)
+        ...
 
     return jsonify([]), 200
 
