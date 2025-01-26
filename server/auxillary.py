@@ -2,6 +2,7 @@ from flask import request, g, current_app
 from werkzeug.exceptions import BadRequest, Unauthorized
 import jwt
 import sys
+from traceback import format_exc
 
 RESPONSE_METADATA : dict = {
     "authorization" : ""
@@ -9,6 +10,7 @@ RESPONSE_METADATA : dict = {
 
 def generic_error_handler(e : Exception):
     print(e)
+    print(format_exc())
     response = {"message" : getattr(e, "description", "An error occured")}
     if getattr(e, "kwargs", None):
         response.update({k : v for k,v in e.kwargs.items()})
