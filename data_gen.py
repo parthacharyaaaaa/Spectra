@@ -49,10 +49,10 @@ class DataMaker:
     SE_CLASS_BEHAVIOR = {
         "Digital Insurance": ((0.1, 0.5, 0.5), (0.0001, 0.2, 1)),
         "Mutual Funds": ((0.3, 0.5, 0.2), (0.01, 0.4, 1)),
-        "Digital Gold": ((0.2, 0.5, 0.3), (0.005, 0.5, 1)),
-        "ETFs": ((0.1, 0.4, 0.5), (0.005, 0.3, 1)),
-        "REITs": ((0.05, 0.2, 0.75), (0.01, 0.2, 1)),
-        "P2P": ((0.4, 0.5, 0.1), (0.02, 0.3, 1)),
+        "Digital Gold": ((0.2, 0.5, 0.3), (0.005, 0.05, 1)),
+        "ETFs": ((0.1, 0.4, 0.5), (0.005, 0.2, 1)),
+        "REITs": ((0.05, 0.2, 0.75), (0.01, 0.1, 1)),
+        "P2P": ((0.4, 0.5, 0.1), (0.02, 0.3, 0.5)),
         "Lifestyle": ((0.3, 0.5, 0.2), (0.1, 0.6, 1)),
         "Medical Bills": ((0.4, 0.4, 0.2), (0.05, 0.7, 1)),
         "Bonds": ((0.2, 0.5, 0.3), (0.01, 0.5, 1))
@@ -73,12 +73,17 @@ class DataMaker:
         while(currentCount < limit):
             for category, behavior in DataMaker.SE_CLASS_BEHAVIOR.items():
                 if random.randint(0, 101) <= behavior[0][self.profile - 1]:
+                    amount = random.randint(DataMaker.GENERATION_METADATA[category][0][0], DataMaker.GENERATION_METADATA[category][0][1] * behavior[1][self.profile - 1])
+                    paymentMethod = random.choice(DataMaker.GENERATION_METADATA[category][-1])
+
+                    if paymentMethod == "Debit":
+                        amount *= -1
+
                     data = (generate_random_date("01/01/24", "31/12/24"),
-                            random.choice(DataMaker.GENERATION_METADATA[category][-1]),
+                            paymentMethod,
                             f"{category} - {random.choice(companies)} {random.choice(company_suffixes)}" if category.upper() != "P2P" else f"{category} - {generate_random_nigga()}",
                             category,
-                            random.randint(DataMaker.GENERATION_METADATA[category][0][0], DataMaker.GENERATION_METADATA[category][0][1] * behavior[1][self.profile - 1])
-                            )
+                            amount)
                     entries.append(pd.Series(data, index=indices))
                     currentCount+=1;
         entries.sort(key = lambda x : x[0])
