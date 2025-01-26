@@ -48,7 +48,7 @@ def storeCSV():
                     "epoch" : datetime.strftime(epoch, "%H:%M:%S, %d/%m/%y"),
                     "sb_filename" : filename}), 201
 
-@app.route("/analyze/<str:filename>", methods=["POST"])
+@app.route("/analyze/<str:filename>", methods=["GET"])
 @require_token
 def analyze(filename : str):
     if not filename:
