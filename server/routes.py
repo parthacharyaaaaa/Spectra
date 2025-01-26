@@ -77,7 +77,7 @@ def analyze(filename : str):
         raise BadRequest("Analysis requires filepath param to be a .csv file")
         
     try:
-        response : bytes = supabaseClient.storage.from_("Data/0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0").download(filename)
+        response : bytes = supabaseClient.storage.from_(f"Data/{g.tkn['uid']}").download(filename)
         idx = response.index(b'Date')
         response = response[idx:]
         idx = response.index(b'--')
@@ -87,51 +87,64 @@ def analyze(filename : str):
     except Exception as e:
         raise NotFound(f"The given filename could not be located in your bucket: {str(e)}")
     
-    tempFilepath = os.path.join(app.static_folder, f"temp_0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0_{filename}")
+    tempFilepath = os.path.join(app.static_folder, f"{g.tkn['uid']}_/{filename}")
     with open(tempFilepath, "wb") as tempFile:
         tempFile.write(response)
         df = pd.read_csv(tempFilepath)
-        print(df.dtypes)
 
 
     # ML logic here
     try:
-        anomalyDetector = AnomalyDetection()
+        identifier = uuid4().hex
+        basepath = os.path.join(app.config["GRAPHS_DIR"], f"temp_{g.tkn['uid']}_{filename[:-4]}")
+        paths : dict ={}
+
+        anomalyDetector = AnomalyDetection(basepath, identifier)
         anomalyDetector.run(df)
 
         summarizer = Summary()
-        summarizer.start(df)
-        summarizer.runner()
+        summarizer.start(df, basepath=basepath, uuid=identifier)
+        summarizer.save_all_graphs()
 
-        clusterAnalyzer = ClusterAnalysis(df)
-        clusterAnalyzer.preprocess_data()
-        clusterAnalyzer.apply_kmeans(n_clusters=3)
-        clusterAnalyzer.plot_boxplot()
-        clusterAnalyzer.plot_scatter_with_regions()
-    except:
+        clusterAnalyzer = ClusterAnalysis(df, basepath, identifier)
+        clusterAnalyzer.run()
+
+        paths.update(anomalyDetector.paths)
+        paths.update(summarizer.paths)
+        paths.update(clusterAnalyzer.paths)
+
+        for k, v in paths.items():
+            print("Bucket:",k,"Other:",v)
+            supabaseClient.storage.from_(f"Plots/0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0").upload(path=k+".png",
+                                                                                              file=v,
+                                                                                              file_options={"content-type" : "image/png"})
+    except Exception as e:
+        print(e)
         raise InternalServerError("An error occured with our ML service :(")
     finally:
         os.remove(tempFilepath)
+        for graphPath in paths.values():
+            os.remove(graphPath)
 
-    return jsonify([]), 200
+    return jsonify([f"Plots/0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0/{bucketPath}" for bucketPath in paths.keys()]), 200
 
-@app.route("keys/rotate", methods=["POST"])
-@private
-@enforce_JSON
-def rotateKey():
-    if not ("new_key" in g.REQUEST_JSON and
-            "old_key" in g.REQUEST_JSON):
-        raise BadRequest(f"{request.path} expects 'new_key' and 'old_key' in JSON body")
-    try:
-        newKey = str(g.REQUEST_JSON["new_key"]).strip()
-    except:
-        raise BadRequest("Invalid key")
-    if not (16 < len(newKey) < 128):
-        raise BadRequest("JWT Signing key must be between 16 and 128 characters long")
+# @app.route("/keys/rotate", methods=["POST"])
+# # @private
+# # @enforce_JSON
+# def rotateKey():
+#     if not ("new_key" in g.REQUEST_JSON and
+#             "old_key" in g.REQUEST_JSON):
+#         raise BadRequest(f"{request.path} expects 'new_key' and 'old_key' in JSON body")
+#     try:
+#         newKey = str(g.REQUEST_JSON["new_key"]).strip()
+#     except:
+#         raise BadRequest("Invalid key")
+#     if not (16 < len(newKey) < 128):
+#         raise BadRequest("JWT Signing key must be between 16 and 128 characters long")
     
-    app.config["JWT_KEYS"].append(g.REQUEST_JSON("new_key"))
-    currentKeyCount = len(app.config["JWT_KEYS"])
-    if currentKeyCount > app.config["MAX_ACTIVE_KEYS"]:
-        app.config["JWT_KEYS"] = app.config["JWT_KEYS"][currentKeyCount-app.config["MAX_ACTIVE_KEYS"]:]
+#     app.config["JWT_KEYS"].append(g.REQUEST_JSON("new_key"))
+#     currentKeyCount = len(app.config["JWT_KEYS"])
+#     if currentKeyCount > app.config["MAX_ACTIVE_KEYS"]:
+#         app.config["JWT_KEYS"] = app.config["JWT_KEYS"][currentKeyCount-app.config["MAX_ACTIVE_KEYS"]:]
 
-    return jsonify("Keys updated"), 200
+#     return jsonify("Keys updated"), 200
