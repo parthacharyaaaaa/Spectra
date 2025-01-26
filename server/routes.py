@@ -24,7 +24,7 @@ import os
 
 
 @app.route("/parse-csv", methods=["POST"])
-# @require_token
+@require_token
 @validate_CSV
 def storeCSV():
     try:
@@ -41,14 +41,14 @@ def storeCSV():
     except:
         raise InternalServerError("There seems to be an issue on our side when saving CSV files. Please try again later :(")
     
-    supabaseClient.storage.from_("Data/0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0").upload(path = filename,
+    supabaseClient.storage.from_(f"Data/{g.tkn['uid']}").upload(path = filename,
                                                                                      file=tempPath,
                                                                                      file_options={'Content-Type': 'text/csv'})
     try:
         supabaseClient.from_("analysis").insert({
             "score": None,
             "file_name": filename,
-            "user_id": "0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0",
+            "user_id": g.tkn["uid"],
             "category": None
         }).execute()
 
@@ -56,20 +56,19 @@ def storeCSV():
         
         supabaseClient.from_("users").update({
             "records": newRecord
-        }).eq("user_id", "0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0").execute()
+        }).eq("user_id", g.tkn["uid"]).execute()
     except:
-        # supabaseClient.storage.from_("Data/0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0").remove([filename])
         os.remove(tempPath)
         raise InternalServerError("There seems to be an issue our Supabase integration, please try again later :(")
     
     os.remove(tempPath)
 
-    return jsonify({"user" : "0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0",
+    return jsonify({"user" : g.tkn["uid"],
                     "epoch" : datetime.strftime(epoch, "%H:%M:%S, %d/%m/%y"),
                     "sb_filename" : filename}), 201
 
 @app.route("/analyze/<string:filename>", methods=["GET"])
-# @require_token
+@require_token
 def analyze(filename : str):
     if not filename:
         raise BadRequest("Empty filename passed")
