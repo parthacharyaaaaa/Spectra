@@ -11,6 +11,7 @@ import pandas as pd
 ### Models ###
 from server.FraudDetect import AnomalyDetection
 from server.summary import Summary
+from server.SpendingPattern import ClusterAnalysis
 
 ### Custom decorators ###
 from server.auxillary import validate_CSV, enforce_JSON, require_token
@@ -102,6 +103,12 @@ def analyze(filename : str):
         summarizer = Summary()
         summarizer.start(df)
         summarizer.runner()
+
+        clusterAnalyzer = ClusterAnalysis(df)
+        clusterAnalyzer.preprocess_data()
+        clusterAnalyzer.apply_kmeans(n_clusters=3)
+        clusterAnalyzer.plot_boxplot()
+        clusterAnalyzer.plot_scatter_with_regions()
     except:
         raise InternalServerError("An error occured with our ML service :(")
     finally:
