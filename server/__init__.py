@@ -2,9 +2,10 @@
 import os
 from flask import Flask
 from dotenv import load_dotenv
-from auxillary import generic_error_handler
+from server.auxillary import generic_error_handler
 
-loaded = load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
+loaded = load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env"))
+print(os.path.join(os.path.dirname(__file__), ".env"))
 if not loaded:
     raise FileNotFoundError()
 

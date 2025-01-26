@@ -5,7 +5,7 @@ from werkzeug.exceptions import BadRequest, InternalServerError
 
 import pandas as pd
 
-from auxillary import validate_CSV, enforce_JSON, require_token
+from server.auxillary import validate_CSV, enforce_JSON, require_token
 
 from datetime import datetime
 from uuid import uuid4
