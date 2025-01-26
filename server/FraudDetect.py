@@ -1,23 +1,16 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 import numpy as np
 import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
 import pickle
+import os
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import LabelEncoder
 
-
-# In[2]:
-
-
 class AnomalyDetection:
-    def __init__(self, contamination=0.15, random_state=42):
+    def __init__(self, basepath : os.PathLike | str, uuid, contamination=0.15, random_state=42):
+        self.basepath = basepath
+        self.paths : dict = {}
+        self.x = uuid
         self.contamination = contamination
         self.random_state = random_state
         self.encoder = LabelEncoder()
@@ -35,7 +28,7 @@ class AnomalyDetection:
         self.df['Anomaly'] = self.isolation_forest.fit_predict(self.df[features])
     
     def visualize_anomalies(self):
-        # Scatter plot to visualize anomalies
+        # Scatter plot to visualize anomalies using Matplotlib
         plt.figure(figsize=(12, 6))
 
         # Plot normal points
@@ -52,32 +45,21 @@ class AnomalyDetection:
         plt.title('Isolation Forest - Anomalies Detection', fontsize=14)
         plt.legend()
         plt.grid(True)
-        plt.show()
 
-    def save_model(self, file_path):
-        with open(file_path, "wb") as file:
-            pickle.dump(self, file)
-        print(f"Model saved to {file_path}")
-    
+        # Ensure the 'fraud' folder exists
+        if not os.path.exists('fraud'):
+            os.makedirs('fraud')
+
+        # Save the plot inside the 'fraud' folder
+        #plot_path = 'fraud/anomaly_detection_plot.png'
+        
+        plt.savefig(f'{self.basepath}.annomally.png')  # Save the plot as an image
+        self.paths.update({f"{self.x}-anomally" : f'{self.basepath}.annomally.png'})
+        plt.close()
+
+   
     def run(self, df):  # Updated to accept df as argument
         self.df = df
         self.preprocess_data()
         self.detect_anomalies()
         self.visualize_anomalies()
-
-
-# In[3]:
-
-
-# In[5]:
-
-
-
-# Load the updated model
-
-
-# In[ ]:
-
-
-
-

@@ -1,24 +1,17 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
+import os
 import pandas as pd
-# In[2]:
-
-# In[3]:
-
-
-import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-
+import matplotlib.pyplot as plt
+import seaborn as sns
+from uuid import uuid4
 class Summary:
-    def start(self, data):
+    def start(self, data, basepath : os.PathLike | str, uuid : str):
         self.data = data
+        self.basepath = basepath
+        self.x = uuid
+        self.paths : dict = {}
         self.data['Date'] = pd.to_datetime(self.data['Date'], format='%d/%m/%y')
         self.data['Quarter'] = self.data['Date'].dt.quarter
         self.data['Amount'] = self.data['Amount (INR)']
-        
 
     def runner(self):
         self.Category_leader()
@@ -33,10 +26,14 @@ class Summary:
         category_counts = self.data["Category"].value_counts()
         print(category_counts)
         # Unique Graph - Donut Chart
-        fig = go.Figure(data=[go.Pie(labels=category_counts.index, values=category_counts.values, hole=0.3)])
-        fig.update_traces(marker=dict(colors=["#6a0dad", "#3a3a3a"]))  # Purple and Black
-        fig.update_layout(title="Category Counts", template="plotly_dark")
-        fig.show()
+        fig, ax = plt.subplots(figsize=(7, 7))
+        ax.pie(category_counts, labels=category_counts.index, autopct='%1.1f%%', startangle=90, 
+               wedgeprops=dict(width=0.4, edgecolor='black'))
+        ax.set_title("Category Counts")
+        print()
+        plt.savefig(f'{self.basepath}.Category_leader.png')  # Save the plot as an image
+        self.paths.update({f"{self.x}-cat_leader" : f'{self.basepath}.Category_leader.png'})
+        plt.close()
 
     def Category_ascend_decend(self, var=None):
         if var is not None:
@@ -52,19 +49,19 @@ class Summary:
         print(ascend[["Category", "Amount"]].head())
         
         # Unique Graph - Box Plot for Distribution
-        fig_descend = px.box(decend, x="Category", y="Amount", 
-                             title="Descending Amount by Category", 
-                             labels={"Category": "Category", "Amount": "Amount"}, 
-                             template="plotly_dark")
-        fig_descend.update_traces(marker=dict(color="#6a0dad"))  # Purple color
-        fig_descend.show()
+        fig, ax = plt.subplots(figsize=(8, 6))
+        sns.boxplot(x="Category", y="Amount", data=decend, palette=["#6a0dad"])
+        ax.set_title("Descending Amount by Category")
+        plt.savefig(f'{self.basepath}.Category_ascend_decend_descend.png')
+        self.paths.update({f"{self.x}-cat_asc_desc_desc" : '{self.basepath}.Category_ascend_decend_descend.png'})
+        plt.close()
         
-        fig_ascend = px.box(ascend, x="Category", y="Amount", 
-                            title="Ascending Amount by Category", 
-                            labels={"Category": "Category", "Amount": "Amount"}, 
-                            template="plotly_dark")
-        fig_ascend.update_traces(marker=dict(color="#3a3a3a"))  # Black color
-        fig_ascend.show()
+        fig, ax = plt.subplots(figsize=(8, 6))
+        sns.boxplot(x="Category", y="Amount", data=ascend, palette=["#3a3a3a"])
+        ax.set_title("Ascending Amount by Category")
+        plt.savefig(f'{self.basepath}.Category_ascend_decend_ascend.png')
+        self.paths.update({f"{self.x}-cat_asc_desc_desc" : f'{self.basepath}.Category_ascend_decend_ascend.png'})
+        plt.close()
 
     def Category_pay(self, var=None):
         if var is not None:
@@ -74,20 +71,27 @@ class Summary:
         category_payment_counts = grpdata["Payment Type"].value_counts()
         print(category_payment_counts)
         # Unique Graph - Bar Chart with Horizontal Orientation
-        fig = px.bar(category_payment_counts, x=category_payment_counts.values, y=category_payment_counts.index, 
-                     orientation='h', title="Payment Type Distribution by Category", 
-                     labels={"x": "Count", "y": "Payment Type"}, template="plotly_dark")
-        fig.update_traces(marker=dict(color="#6a0dad"))  # Purple color
-        fig.show()
+        fig, ax = plt.subplots(figsize=(8, 6))
+        category_payment_counts.plot(kind='barh', color="#6a0dad", ax=ax)
+        ax.set_title("Payment Type Distribution by Category")
+        ax.set_xlabel("Count")
+        ax.set_ylabel("Payment Type")
+        plt.savefig(f'{self.basepath}.Category_pay.png')
+        self.paths.update({f"{self.x}-cat_pay" : f'{self.basepath}.Category_pay.png'})
+        plt.close()
 
     def Quarter_leader(self):
         quarter_counts = self.data["Quarter"].value_counts()
         print(quarter_counts)
         # Unique Graph - Scatter Plot for Trend Analysis
-        fig = px.scatter(x=quarter_counts.index, y=quarter_counts.values, 
-                         title="Quarter Counts", labels={"x": "Quarter", "y": "Count"}, template="plotly_dark")
-        fig.update_traces(marker=dict(color="#3a3a3a"))  # Black color
-        fig.show()
+        fig, ax = plt.subplots(figsize=(8, 6))
+        ax.scatter(quarter_counts.index, quarter_counts.values, color="#3a3a3a")
+        ax.set_title("Quarter Counts")
+        ax.set_xlabel("Quarter")
+        ax.set_ylabel("Count")
+        plt.savefig(f'{self.basepath}.Quarter_leader.png')
+        self.paths.update({f"{self.x}-q_leader" : f'{self.basepath}.Quarter_leader.png'})
+        plt.close()
 
     def Quarter_pay(self, var=None):
         if var is not None:
@@ -97,11 +101,14 @@ class Summary:
         quarter_payment_counts = grpdata["Payment Type"].value_counts()
         print(quarter_payment_counts)
         # Unique Graph - Bar Chart with Color Gradient
-        fig = px.bar(quarter_payment_counts, x=quarter_payment_counts.index, y=quarter_payment_counts.values, 
-                     title="Payment Type Distribution by Quarter", 
-                     labels={"x": "Payment Type", "y": "Count"}, template="plotly_dark")
-        fig.update_traces(marker=dict(color="#6a0dad"))  # Purple color
-        fig.show()
+        fig, ax = plt.subplots(figsize=(8, 6))
+        quarter_payment_counts.plot(kind='bar', color="#6a0dad", ax=ax)
+        ax.set_title("Payment Type Distribution by Quarter")
+        ax.set_xlabel("Payment Type")
+        ax.set_ylabel("Count")
+        plt.savefig(f'{self.basepath}.Quarter_pay.png')
+        self.paths.update({f"{self.x}-q_pay" : f'{self.basepath}.Quarter_pay.png'})
+        plt.close()
 
     def Quarter_ascend_decend(self, var=None):
         if var is not None:
@@ -117,17 +124,17 @@ class Summary:
         print(ascend[["Quarter", "Amount"]].head())
         
         # Unique Graph - Violin Plot
-        fig_descend = px.violin(decend, x="Quarter", y="Amount", box=True, 
-                               title="Descending Amount by Quarter", 
-                               labels={"Quarter": "Quarter", "Amount": "Amount"}, template="plotly_dark")
-        fig_descend.update_traces(marker=dict(color="#6a0dad"))  # Purple color
-        fig_descend.show()
+        fig, ax = plt.subplots(figsize=(8, 6))
+        sns.violinplot(x="Quarter", y="Amount", data=decend, color="#6a0dad", ax=ax)
+        ax.set_title("Descending Amount by Quarter")
+        plt.savefig(f'{self.basepath}.Quarter_ascend_decend_descend.png')
+        plt.close()
         
-        fig_ascend = px.violin(ascend, x="Quarter", y="Amount", box=True, 
-                               title="Ascending Amount by Quarter", 
-                               labels={"Quarter": "Quarter", "Amount": "Amount"}, template="plotly_dark")
-        fig_ascend.update_traces(marker=dict(color="#3a3a3a"))  # Black color
-        fig_ascend.show()
+        fig, ax = plt.subplots(figsize=(8, 6))
+        sns.violinplot(x="Quarter", y="Amount", data=ascend, color="#3a3a3a", ax=ax)
+        ax.set_title("Ascending Amount by Quarter")
+        plt.savefig(f'{self.basepath}.Quarter_ascend_decend_ascend.png')
+        plt.close()
 
     def Quarter_cat(self, var=None):
         if var is not None:
@@ -137,22 +144,21 @@ class Summary:
         quarter_category_counts = grpdata["Category"].value_counts()
         print(quarter_category_counts)
         # Unique Graph - Heatmap for Category Distribution
-        fig = px.imshow([quarter_category_counts.values], 
-                        labels=dict(x="Category", y="Quarter", color="Count"),
-                        title="Category Distribution by Quarter", 
-                        template="plotly_dark")
-        fig.update_traces(colorscale="Purples")  # Purple color scale
-        fig.show()
+        fig, ax = plt.subplots(figsize=(8, 6))
+        sns.heatmap([quarter_category_counts.values], annot=True, fmt='d', cmap="Purples", 
+                    xticklabels=quarter_category_counts.index, yticklabels=["Quarter"], ax=ax)
+        ax.set_title("Category Distribution by Quarter")
+        plt.savefig(f'{self.basepath}.Quarter_cat.png')
+        self.paths.update({f"{self.x}-q_cat" : f'{self.basepath}.Quarter_cat.png'})
+        plt.close()
 
-
-# In[4
-
-# In[5]:
-
-# In[6]
-
-# In[ ]:
-
-
-
-
+    def save_all_graphs(self):
+        
+        self.Category_leader()
+        self.Category_ascend_decend()
+        self.Category_pay()
+        self.Quarter_leader()
+        self.Quarter_pay()
+        self.Quarter_ascend_decend()
+        self.Quarter_cat()
+        print("All graphs saved in the 'graphs' folder.")
