@@ -4,19 +4,16 @@ from flask import Response, jsonify, g
 from werkzeug.exceptions import BadRequest, InternalServerError, NotFound
 
 import pandas as pd
-import pickle
+# import pickle         Fuck this lil nigga
 
+from server.FraudDetect import AnomalyDetection
 from server.auxillary import validate_CSV, enforce_JSON, require_token
 
 from datetime import datetime
 from uuid import uuid4
 import os
 
-class MyCustomUnpickler(pickle.Unpickler):
-    def find_class(self, module, name):
-        if module == "__main__":
-            module = "server.routes"
-        return super().find_class(module, name)
+
 
 @app.route("/parse-csv", methods=["POST"])
 # @require_token
@@ -78,14 +75,8 @@ def analyze(filename : str):
 
     # ML logic here
     res : dict = {}
-    with open("server/model.pkl", "rb") as file:
-        unpickler = MyCustomUnpickler(file)
-        loaded_model = unpickler.load()
-        new_data = pd.read_csv("server/output.csv")
-        loaded_model.run(new_data)
-        x = loaded_model.visualize_anomalies()
+    model = AnomalyDetection()
+    model.run(pd.read_csv("server/output.csv"))
 
-    print(type(x))
-    print(x)
     return jsonify(res), 200
 
