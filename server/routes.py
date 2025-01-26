@@ -47,3 +47,21 @@ def storeCSV():
     return jsonify({"user" : g.tkn["sub"],
                     "epoch" : datetime.strftime(epoch, "%H:%M:%S, %d/%m/%y"),
                     "sb_filename" : filename}), 201
+
+@app.route("/analyze/<str:filename>", methods=["POST"])
+@require_token
+def analyze(filename : str):
+    if not filename:
+        raise BadRequest("Empty filename passed")
+    response = supabaseClient.storage.from_(g.tkn["sub"]).download(filename+".csv")
+
+    if response.get("error"):
+        raise InternalServerError(f"File could not be retrieved: {response['error']['message']}")
+
+    file_content = response.get("data")
+
+    # ML logic here
+    res : dict = {}
+
+    return jsonify(res), 200
+
