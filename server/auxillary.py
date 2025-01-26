@@ -45,7 +45,8 @@ def require_token(endpoint):
                 tkn : dict | None = jwt.decode(encodedToken,
                                                key=key,
                                                verify=True,
-                                               leeway=current_app.config["JWT_LEEWAY"])
+                                               leeway=current_app.config["JWT_LEEWAY"],
+                                               algorithms=["HS256"])
                 g.tkn = tkn
                 isValid = True
                 break

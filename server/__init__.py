@@ -22,7 +22,9 @@ CONFIG = {
         'Transaction Name': 'object',
         'Category': 'object',
         'Amount (INR)': 'int64',
-    }
+    },
+    "SB_API_KEY" : os.environ["SUPABASE_KEY"],
+    "MAX_ACTIVE_KEYS" : int(os.environ["MAX_ACTIVE_KEYS"])
 }
 
 
