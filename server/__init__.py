@@ -9,7 +9,8 @@ print(os.path.join(os.path.dirname(__file__), ".env"))
 if not loaded:
     raise FileNotFoundError()
 
-app = Flask("AI Service")
+app = Flask("AI Service",
+            static_folder=os.path.join(os.path.dirname(os.path.dirname(__file__)), os.environ["APP_STATIC_FOLDER"]))
 
 CONFIG = {
     "SECRET_KEY" : os.environ["SECRET_KEY"],
