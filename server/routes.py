@@ -11,7 +11,7 @@ from datetime import datetime
 from uuid import uuid4
 
 @app.route("/parse-csv", methods=["POST"])
-@require_token
+# @require_token
 @validate_CSV
 def storeCSV():
     try:
@@ -48,7 +48,7 @@ def storeCSV():
                     "epoch" : datetime.strftime(epoch, "%H:%M:%S, %d/%m/%y"),
                     "sb_filename" : filename}), 201
 
-@app.route("/analyze/<str:filename>", methods=["GET"])
+@app.route("/analyze/<string:filename>", methods=["GET"])
 @require_token
 def analyze(filename : str):
     if not filename:
