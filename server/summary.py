@@ -13,8 +13,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 class Summary:
-    def start(self, csv_file):
-        self.data = pd.read_csv(csv_file)
+    def start(self, data):
+        self.data = data
         self.data['Date'] = pd.to_datetime(self.data['Date'], format='%d/%m/%y')
         self.data['Quarter'] = self.data['Date'].dt.quarter
         self.data['Amount'] = self.data['Amount (INR)']
