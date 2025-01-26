@@ -74,9 +74,8 @@ def analyze(filename : str):
 
 
     # ML logic here
-    res : dict = {}
-    model = AnomalyDetection()
-    model.run(pd.read_csv("server/output.csv"))
+    # model = AnomalyDetection()
+    # model.run(pd.read_csv("server/output.csv"))
 
-    return jsonify(res), 200
+    return jsonify([]), 200
 
