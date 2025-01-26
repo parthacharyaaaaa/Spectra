@@ -72,6 +72,9 @@ def storeCSV():
 def analyze(filename : str):
     if not filename:
         raise BadRequest("Empty filename passed")
+    
+    if filename[-4:] != ".csv":
+        raise BadRequest("Analysis requires filepath param to be a .csv file")
         
     try:
         response = supabaseClient.storage.from_("Data/0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0").download(filename)
