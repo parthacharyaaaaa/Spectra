@@ -70,9 +70,9 @@ def analyze(filename : str):
         raise BadRequest("Empty filename passed")
         
     try:
-        response = supabaseClient.storage.from_("Data/0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0").download(filename+".csv")
-    except:
-        raise NotFound("The given filename could not be located in your bucket")
+        response = supabaseClient.storage.from_("Data/0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0").download(filename)
+    except Exception as e:
+        raise NotFound(f"The given filename could not be located in your bucket: {str(e)}")
     
 
 
