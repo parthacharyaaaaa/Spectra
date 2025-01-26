@@ -28,7 +28,7 @@ CONFIG = {
 
 CORS(app, resources={
     r"/*": {
-        "origins": ["http://localhost:3000/"],
+        "origins": ["http://localhost:3000"],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization", "authorization"],
         "expose_headers": ["Authorization", "authorization"]
