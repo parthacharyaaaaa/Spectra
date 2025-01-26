@@ -1,5 +1,6 @@
 # Custom directories
 temp_folder/
+graphs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
