@@ -2,7 +2,7 @@
 from server import app, supabaseClient
 
 ### Flask and Werkzeug dependencies ###
-from flask import Response, jsonify, g
+from flask import Response, jsonify, g, request
 from werkzeug.exceptions import BadRequest, InternalServerError, NotFound
 
 ### Data transformation and CSV-assosciated functions ###
@@ -14,7 +14,7 @@ from server.summary import Summary
 from server.SpendingPattern import ClusterAnalysis
 
 ### Custom decorators ###
-from server.auxillary import validate_CSV, enforce_JSON, require_token
+from server.auxillary import validate_CSV, enforce_JSON, require_token, private
 
 ### Standard library ###
 from datetime import datetime
@@ -112,8 +112,27 @@ def analyze(filename : str):
     except:
         raise InternalServerError("An error occured with our ML service :(")
     finally:
-        # os.remove(tempFilepath)
-        ...
+        os.remove(tempFilepath)
 
     return jsonify([]), 200
 
+@app.route("keys/rotate", methods=["POST"])
+@private
+@enforce_JSON
+def rotateKey():
+    if not ("new_key" in g.REQUEST_JSON and
+            "old_key" in g.REQUEST_JSON):
+        raise BadRequest(f"{request.path} expects 'new_key' and 'old_key' in JSON body")
+    try:
+        newKey = str(g.REQUEST_JSON["new_key"]).strip()
+    except:
+        raise BadRequest("Invalid key")
+    if not (16 < len(newKey) < 128):
+        raise BadRequest("JWT Signing key must be between 16 and 128 characters long")
+    
+    app.config["JWT_KEYS"].append(g.REQUEST_JSON("new_key"))
+    currentKeyCount = len(app.config["JWT_KEYS"])
+    if currentKeyCount > app.config["MAX_ACTIVE_KEYS"]:
+        app.config["JWT_KEYS"] = app.config["JWT_KEYS"][currentKeyCount-app.config["MAX_ACTIVE_KEYS"]:]
+
+    return jsonify("Keys updated"), 200
