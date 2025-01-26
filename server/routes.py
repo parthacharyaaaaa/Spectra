@@ -41,7 +41,7 @@ def storeCSV():
     except:
         raise InternalServerError("There seems to be an issue on our side when saving CSV files. Please try again later :(")
     
-    supabaseClient.storage.from_(f"Data/{request.headers.get("uuid")}").upload(path = filename,
+    supabaseClient.storage.from_(f"Data/{request.headers.get('uuid')}").upload(path = filename,
                                                                                      file=tempPath,
                                                                                      file_options={'Content-Type': 'text/csv'})
     try:
@@ -66,6 +66,7 @@ def storeCSV():
     return jsonify({"user" : request.headers.get("uuid"),
                     "epoch" : datetime.strftime(epoch, "%H:%M:%S, %d/%m/%y"),
                     "sb_filename" : filename}), 201
+
 @app.route("/analyze/<string:filename>", methods=["GET"])
 @require_token
 def analyze(filename : str):
@@ -91,12 +92,11 @@ def analyze(filename : str):
         tempFile.write(response)
         df = pd.read_csv(tempFilepath)
 
-
     # ML logic here
+    paths = {}
     try:
         identifier = uuid4().hex
         basepath = os.path.join(app.config["GRAPHS_DIR"], f"temp_{request.headers.get('uuid')}_{filename[:-4]}")
-        paths : dict ={}
 
         anomalyDetector = AnomalyDetection(basepath, identifier)
         anomalyDetector.run(df)
@@ -113,10 +113,10 @@ def analyze(filename : str):
         paths.update(clusterAnalyzer.paths)
 
         for k, v in paths.items():
-            print("Bucket:",k,"Other:",v)
+            print("Bucket:", k, "Other:", v)
             supabaseClient.storage.from_(f"Plots/{request.headers.get('uuid')}").upload(path=k+".png",
-                                                                                              file=v,
-                                                                                              file_options={"content-type" : "image/png"})
+                                                                                     file=v,
+                                                                                     file_options={"content-type": "image/png"})
     except Exception as e:
         print(e)
         raise InternalServerError("An error occured with our ML service :(")
@@ -125,7 +125,7 @@ def analyze(filename : str):
         for graphPath in paths.values():
             os.remove(graphPath)
 
-    return jsonify([f"Plots/{request.headers.get('uuid')}_/{bucketPath}" for bucketPath in paths.keys()]), 200
+    return jsonify([f"{request.headers.get('uuid')}/{bucketPath}.png" for bucketPath in paths.keys()]), 200
 
 # @app.route("/keys/rotate", methods=["POST"])
 # # @private
