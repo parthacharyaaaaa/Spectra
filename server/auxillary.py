@@ -3,6 +3,7 @@ from werkzeug.exceptions import BadRequest, Unauthorized
 import jwt
 import sys
 from traceback import format_exc
+from functools import wraps
 
 RESPONSE_METADATA : dict = {
     "authorization" : ""
@@ -18,6 +19,7 @@ def generic_error_handler(e : Exception):
     return response, getattr(e, "code", 500)
 
 def enforce_JSON(endpoint):
+    @wraps(endpoint)
     def decorated(*args, **kwargs):
         if request.mimetype.split("/")[-1].lower() != "json":
             raise BadRequest(f"Requests to {request.root_path} must be in JSON format")
@@ -30,6 +32,7 @@ def enforce_JSON(endpoint):
     return decorated
 
 def require_token(endpoint):
+    @wraps(endpoint)
     def decorated(*args, **kwargs):
         global RESPONSE_METADATA
         encodedToken : str = request.headers.get("Authorization", request.headers.get("authorization", None))
@@ -63,6 +66,7 @@ def require_token(endpoint):
     return decorated
 
 def validate_CSV(endpoint):
+    @wraps(endpoint)
     def decorated(*args, **kwargs):
         CSV_FILE = request.files.get("csv_file")
         if not CSV_FILE:
@@ -79,6 +83,7 @@ def validate_CSV(endpoint):
     return decorated
 
 def private(endpoint):
+    @wraps(endpoint)
     def decorated(*args, **kwargs):
         authKey = request.headers.get("X-API-KEY")
         if not authKey:
