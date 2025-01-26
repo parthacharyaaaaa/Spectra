@@ -9,42 +9,50 @@ from server.auxillary import validate_CSV, enforce_JSON, require_token
 
 from datetime import datetime
 from uuid import uuid4
+import os
 
 @app.route("/parse-csv", methods=["POST"])
-@require_token
+# @require_token
 @validate_CSV
 def storeCSV():
     try:
-        pd.read_csv(g.CSV_FILE, dtype=app.config["CSV_COL_DTYPES"])
+        tempDf = pd.read_csv(g.CSV_FILE, dtype=app.config["CSV_COL_DTYPES"])
     except:
         raise BadRequest("CSV file could not be parsed properly. Ensure proper file format, size, encoding, and properly formatted columns.")
     
     epoch = datetime.now()
-    filename = f"{g.CSV_FILE}_{epoch.strftime('%H%M%S%d%m%y')}_{uuid4().hex}.csv"
+    filename = f"{g.CSV_FILE.name or 'csv_file'}_{epoch.strftime('%H%M%S%d%m%y')}_{uuid4().hex}.csv"
+    tempPath = os.path.join(app.static_folder, filename)
 
-    response = supabaseClient.storage.from_(g.tkn["sub"]).upload(filename)
-    if response.get("error"):
-        raise InternalServerError(f"Error uploading file: {response['error']}")
+    try:
+        tempDf.to_csv(tempPath)
+    except:
+        raise InternalServerError("There seems to be an issue on our side when saving CSV files. Please try again later :(")
     
-    analysis_response = supabaseClient.from_("analysis").insert({
-        "score": None,
-        "file_name": filename,
-        "user_id": g.tkn["sub"],
-        "category": None
-    }).execute()
+    supabaseClient.storage.from_("Data/0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0").upload(path = filename,
+                                                                                     file=tempPath,
+                                                                                     file_options={'Content-Type': 'text/csv'})
+    try:
+        supabaseClient.from_("analysis").insert({
+            "score": None,
+            "file_name": filename,
+            "user_id": "0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0",
+            "category": None
+        }).execute()
 
-    if analysis_response.get("error"):
-        raise InternalServerError(f"Error inserting into 'analysis': {analysis_response['error']}")
+        newRecord = int(supabaseClient.from_("users").select("records").execute().data[0]['records']) + 1
+        
+        supabaseClient.from_("users").update({
+            "records": newRecord
+        }).eq("user_id", "0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0").execute()
+    except:
+        # supabaseClient.storage.from_("Data/0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0").remove([filename])
+        os.remove(tempPath)
+        raise InternalServerError("There seems to be an issue our Supabase integration, please try again later :(")
+    
+    os.remove(tempPath)
 
-    # Update the 'records' column in the 'users' table
-    update_response = supabaseClient.from_("users").update({
-        "records": supabaseClient.raw("records + 1")
-    }).eq("uuid", g.tkn["sub"]).execute()
-
-    if update_response.get("error"):
-        raise InternalServerError(f"Error updating 'users': {update_response['error']}")
-
-    return jsonify({"user" : g.tkn["sub"],
+    return jsonify({"user" : "0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0",
                     "epoch" : datetime.strftime(epoch, "%H:%M:%S, %d/%m/%y"),
                     "sb_filename" : filename}), 201
 
