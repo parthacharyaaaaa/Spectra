@@ -11,7 +11,7 @@ def generic_error_handler(e : Exception):
     print(e)
     response = {"message" : getattr(e, "description", "An error occured")}
     if getattr(e, "kwargs", None):
-        response.update({k : v for k,v in e["kwargs"]})
+        response.update({k : v for k,v in e.kwargs.items()})
     
     return response, getattr(e, "code", 500)
 
