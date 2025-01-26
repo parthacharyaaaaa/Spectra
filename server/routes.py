@@ -1,15 +1,22 @@
 from server import app, supabaseClient
 
 from flask import Response, jsonify, g
-from werkzeug.exceptions import BadRequest, InternalServerError
+from werkzeug.exceptions import BadRequest, InternalServerError, NotFound
 
 import pandas as pd
+import pickle
 
 from server.auxillary import validate_CSV, enforce_JSON, require_token
 
 from datetime import datetime
 from uuid import uuid4
 import os
+
+class MyCustomUnpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        if module == "__main__":
+            module = "server.routes"
+        return super().find_class(module, name)
 
 @app.route("/parse-csv", methods=["POST"])
 # @require_token
@@ -61,15 +68,24 @@ def storeCSV():
 def analyze(filename : str):
     if not filename:
         raise BadRequest("Empty filename passed")
-    response = supabaseClient.storage.from_(g.tkn["sub"]).download(filename+".csv")
+        
+    try:
+        response = supabaseClient.storage.from_("Data/0d5432a1-459a-4bb6-b301-9a8c5fbfe0c0").download(filename+".csv")
+    except:
+        raise NotFound("The given filename could not be located in your bucket")
+    
 
-    if response.get("error"):
-        raise InternalServerError(f"File could not be retrieved: {response['error']['message']}")
-
-    file_content = response.get("data")
 
     # ML logic here
     res : dict = {}
+    with open("server/model.pkl", "rb") as file:
+        unpickler = MyCustomUnpickler(file)
+        loaded_model = unpickler.load()
+        new_data = pd.read_csv("server/output.csv")
+        loaded_model.run(new_data)
+        x = loaded_model.visualize_anomalies()
 
+    print(type(x))
+    print(x)
     return jsonify(res), 200
 

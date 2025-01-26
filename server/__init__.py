@@ -1,6 +1,7 @@
 # Oh Allah forgive me for having everything in a single file
 import os
 from flask import Flask
+from flask_cors import CORS
 from dotenv import load_dotenv
 from server.auxillary import generic_error_handler
 
@@ -23,6 +24,16 @@ CONFIG = {
         'Amount (INR)': 'int64',
     }
 }
+
+
+CORS(app, resources={
+    r"/*": {
+        "origins": ["http://localhost:3000/"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization", "authorization"],
+        "expose_headers": ["Authorization", "authorization"]
+    }
+})
 
 app.config.from_mapping(CONFIG)
 app.register_error_handler(Exception, generic_error_handler)
