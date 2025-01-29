@@ -25,6 +25,10 @@ class Video_Request(db.Model):
     time_added = db.Column(DATETIME, nullable = False)
     time_removed = db.Column(DATETIME, nullable = True)
 
+    __table_args__ = (
+        PrimaryKeyConstraint(id, name="pk_video_requests")
+    )
+
     def __init__(self, filename: str, filetype: str, video_length: float, context_tag: str | None = None, context_text: str | None = None, in_disk: bool = True, time_added=None):
         self.filename = filename
         self.filetype = filetype
