@@ -1,0 +1,301 @@
+Date,Payment Type,Transaction Name,Category,Amount (INR)
+01/01/24,Credit,Lifestyle - Oceanic Group,Lifestyle,5999
+01/03/24,UPI,Mutual Funds - Weyland Group,Mutual Funds,52470
+01/03/24,UPI,Digital Insurance - Virtucon Ltd.,Digital Insurance,642055
+01/06/24,Credit,REITs - Fizzbin Inc,REITs,38630
+01/06/24,Credit,Mutual Funds - Gekko Inc,Mutual Funds,41269
+01/08/24,Credit,ETFs - Cyberdyne ,ETFs,394322
+01/09/24,UPI,Lifestyle - Wayne LLC,Lifestyle,47903
+01/10/24,Credit,Medical Bills - Massive Inc,Medical Bills,465901
+01/10/24,Credit,Medical Bills - AnkhMorpork Ltd.,Medical Bills,9089
+01/11/24,UPI,ETFs - Yoyodyne Ltd.,ETFs,968394
+01/12/24,Debit,Lifestyle - Weyland Inc,Lifestyle,-15003
+01/12/24,Debit,Mutual Funds - GoodBurger Inc,Mutual Funds,-75561
+02/02/24,UPI,Mutual Funds - Gringotts Group,Mutual Funds,68157
+02/04/24,UPI,Mutual Funds - Oceanic ,Mutual Funds,66948
+02/08/24,UPI,Lifestyle - Weyland Inc,Lifestyle,16081
+03/05/24,Debit,Medical Bills - OmniCorp ,Medical Bills,-1072
+03/05/24,UPI,Digital Gold - PiedPiper Ltd.,Digital Gold,9277152
+03/05/24,Debit,ETFs - Gringotts Inc,ETFs,-192447
+03/06/24,UPI,Lifestyle - Fizzbin Group,Lifestyle,25316
+03/06/24,Debit,Digital Gold - MomCorp Group,Digital Gold,-6806273
+03/09/24,Credit,Bonds - Wayne LLC,Bonds,405569
+03/09/24,UPI,Medical Bills - PiedPiper ,Medical Bills,220808
+03/11/24,Debit,Bonds - Weyland Group,Bonds,-252362
+03/11/24,UPI,Lifestyle - Globex ,Lifestyle,2323
+03/12/24,Debit,Digital Insurance - Primatech Ltd.,Digital Insurance,-654183
+04/05/24,UPI,ETFs - Tyrell ,ETFs,132153
+04/05/24,Debit,Digital Gold - Umbrella ,Digital Gold,-6662653
+04/05/24,Debit,Medical Bills - Monsters Group,Medical Bills,-207187
+04/05/24,UPI,Digital Insurance - Krusty Inc,Digital Insurance,13181
+04/07/24,Credit,P2P - Mason Foster,P2P,7890
+04/07/24,Debit,Digital Insurance - Primatech Ltd.,Digital Insurance,-941678
+04/10/24,Debit,P2P - Wesley Wallace,P2P,-1240
+04/11/24,Credit,P2P - Keith Jimenez,P2P,3721
+04/11/24,UPI,REITs - Tyrell Inc,REITs,569461
+04/12/24,UPI,Mutual Funds - Duff ,Mutual Funds,57511
+05/02/24,Debit,Medical Bills - Cogswell Inc,Medical Bills,-441670
+05/03/24,Credit,Mutual Funds - AnkhMorpork Group,Mutual Funds,31640
+05/04/24,UPI,Lifestyle - Stark ,Lifestyle,33602
+05/05/24,Debit,Digital Insurance - Monsters LLC,Digital Insurance,-823925
+05/08/24,UPI,ETFs - Gekko Inc,ETFs,853252
+05/09/24,Credit,P2P - Richard Jones,P2P,22384
+05/12/24,Credit,Bonds - MomCorp Group,Bonds,452833
+05/12/24,UPI,REITs - Initech Inc,REITs,600934
+06/01/24,UPI,Bonds - Kahuna Inc,Bonds,603874
+06/03/24,Debit,ETFs - Rekall Ltd.,ETFs,-464310
+06/05/24,Debit,REITs - Rekall LLC,REITs,-271913
+06/05/24,UPI,Mutual Funds - Duff Ltd.,Mutual Funds,60116
+06/06/24,Debit,Digital Gold - Gadgetron Inc,Digital Gold,-9455805
+06/07/24,Credit,Lifestyle - LexCorp ,Lifestyle,39993
+06/09/24,Debit,Digital Gold - GoodBurger Group,Digital Gold,-2953512
+06/10/24,UPI,Medical Bills - Oceanic Inc,Medical Bills,261493
+06/11/24,UPI,REITs - Krusty ,REITs,1317818
+06/11/24,Debit,Mutual Funds - Gekko ,Mutual Funds,-59925
+06/11/24,UPI,Digital Gold - Aperture Group,Digital Gold,7591776
+06/12/24,Debit,Medical Bills - Gringotts Inc,Medical Bills,-276420
+07/02/24,Debit,Lifestyle - Kahuna Inc,Lifestyle,-18171
+07/05/24,Credit,P2P - Jacob Murphy,P2P,19626
+07/06/24,Debit,REITs - Chum Inc,REITs,-172361
+07/07/24,Debit,P2P - Matteo Jackson,P2P,-8132
+07/09/24,Credit,Medical Bills - BuyNLarge Ltd.,Medical Bills,359654
+07/10/24,Credit,REITs - Renraku ,REITs,1176289
+07/10/24,Credit,Lifestyle - BuyNLarge ,Lifestyle,7224
+07/12/24,Credit,REITs - Oceanic Group,REITs,639778
+08/01/24,Debit,REITs - Globex ,REITs,-420151
+08/01/24,Credit,Digital Gold - Oscorp Ltd.,Digital Gold,2241180
+08/02/24,Debit,Lifestyle - Gadgetron Ltd.,Lifestyle,-11635
+08/02/24,Debit,Digital Gold - Octan Ltd.,Digital Gold,-2441497
+08/06/24,Debit,Lifestyle - Illusions ,Lifestyle,-43802
+08/10/24,Debit,P2P - Gregory Hunt,P2P,-9186
+08/11/24,UPI,ETFs - Illusions Group,ETFs,488467
+08/12/24,Credit,Bonds - Weyland Group,Bonds,82168
+08/12/24,Debit,Digital Gold - Kahuna Group,Digital Gold,-745846
+08/12/24,Credit,P2P - Philip Harris,P2P,21805
+09/02/24,Debit,ETFs - Oceanic Group,ETFs,-173548
+09/03/24,Credit,P2P - Frank Reed,P2P,22769
+09/04/24,Debit,P2P - Seth Diaz,P2P,-12684
+09/06/24,Debit,Lifestyle - Chum Ltd.,Lifestyle,-40754
+09/08/24,UPI,Lifestyle - Initech Inc,Lifestyle,10933
+09/09/24,UPI,Digital Insurance - Kahuna Inc,Digital Insurance,46426
+09/09/24,UPI,Digital Insurance - Gekko Ltd.,Digital Insurance,616221
+09/09/24,UPI,ETFs - Kahuna ,ETFs,150876
+09/09/24,UPI,Lifestyle - EvilCorp. LLC,Lifestyle,35307
+09/10/24,Debit,P2P - Bryce Foster,P2P,-1140
+09/11/24,Debit,Lifestyle - Gekko Group,Lifestyle,-41069
+09/11/24,UPI,Digital Gold - Weyland LLC,Digital Gold,6395316
+10/02/24,UPI,REITs - Renraku Ltd.,REITs,1309138
+10/02/24,UPI,Digital Gold - Hooli Group,Digital Gold,4346804
+10/02/24,UPI,Digital Insurance - Oceanic LLC,Digital Insurance,647193
+10/03/24,Credit,ETFs - Gadgetron Ltd.,ETFs,368132
+10/03/24,Credit,Mutual Funds - Hooli Inc,Mutual Funds,43566
+10/05/24,Debit,REITs - Globex Group,REITs,-873333
+10/06/24,UPI,Digital Insurance - Oscorp Inc,Digital Insurance,713992
+10/07/24,Credit,Digital Gold - Zaibatsu ,Digital Gold,7342024
+10/08/24,Debit,Digital Gold - Weyland Inc,Digital Gold,-9407106
+10/08/24,Credit,Digital Gold - Weyland Inc,Digital Gold,3362462
+10/10/24,Debit,ETFs - Krusty Ltd.,ETFs,-312803
+10/10/24,Debit,Digital Insurance - Hooli Inc,Digital Insurance,-482466
+10/12/24,Debit,Mutual Funds - Yoyodyne ,Mutual Funds,-77297
+10/12/24,Credit,ETFs - Cyberdyne LLC,ETFs,330970
+11/01/24,Credit,Digital Gold - Wonka Ltd.,Digital Gold,8230587
+11/04/24,Debit,Digital Insurance - Virtucon LLC,Digital Insurance,-871041
+11/04/24,UPI,Medical Bills - Duff Inc,Medical Bills,289141
+11/05/24,UPI,Digital Insurance - Illusions LLC,Digital Insurance,426108
+11/05/24,UPI,Bonds - Duff LLC,Bonds,83706
+11/06/24,Debit,REITs - Weyland Ltd.,REITs,-1778600
+11/06/24,Debit,Lifestyle - Hooli ,Lifestyle,-43706
+11/07/24,Credit,P2P - Elijah Morris,P2P,3525
+11/07/24,UPI,ETFs - Aperture LLC,ETFs,262680
+11/07/24,Credit,P2P - Lorenzo Henderson,P2P,6379
+11/09/24,UPI,REITs - LexCorp Group,REITs,764292
+11/11/24,Credit,ETFs - MomCorp Ltd.,ETFs,103769
+11/11/24,Debit,Medical Bills - Weyland Group,Medical Bills,-171591
+11/12/24,Credit,Bonds - LexCorp Inc,Bonds,758271
+11/12/24,UPI,Medical Bills - Spacely Inc,Medical Bills,242234
+12/06/24,Debit,Medical Bills - Initech Inc,Medical Bills,-78992
+12/06/24,Credit,Bonds - Massive Ltd.,Bonds,361173
+12/07/24,UPI,Digital Gold - Hooli Ltd.,Digital Gold,4464177
+12/07/24,UPI,ETFs - Wonka ,ETFs,124745
+12/08/24,Credit,P2P - Enzo Myers,P2P,7435
+12/08/24,UPI,Lifestyle - Oscorp Group,Lifestyle,40062
+12/10/24,Debit,Bonds - Illusions ,Bonds,-854451
+12/10/24,Credit,Lifestyle - Initech ,Lifestyle,31909
+12/12/24,Debit,Bonds - Monsters LLC,Bonds,-897775
+13/01/24,Credit,Mutual Funds - MomCorp Group,Mutual Funds,78962
+13/02/24,Debit,Medical Bills - Globex LLC,Medical Bills,-105225
+13/03/24,Credit,Lifestyle - Rekall Ltd.,Lifestyle,25295
+13/06/24,Credit,Lifestyle - AnkhMorpork Ltd.,Lifestyle,33299
+13/06/24,Credit,Bonds - Aperture ,Bonds,86074
+13/06/24,UPI,Lifestyle - Wonka ,Lifestyle,30623
+13/07/24,Credit,Bonds - Chum Inc,Bonds,391562
+13/07/24,Debit,REITs - Aperture Group,REITs,-1711031
+13/09/24,UPI,Medical Bills - Wonka Ltd.,Medical Bills,74675
+13/10/24,UPI,Digital Insurance - Chum ,Digital Insurance,495053
+13/11/24,UPI,Digital Gold - Krusty LLC,Digital Gold,2827988
+14/02/24,UPI,Mutual Funds - Illusions ,Mutual Funds,76901
+14/02/24,UPI,Digital Insurance - LexCorp Inc,Digital Insurance,827313
+14/05/24,Credit,REITs - Gekko LLC,REITs,1699386
+14/07/24,UPI,Bonds - LexCorp ,Bonds,116721
+14/10/24,Debit,Mutual Funds - Krusty ,Mutual Funds,-94628
+14/10/24,Debit,REITs - MomCorp LLC,REITs,-1765667
+14/11/24,Debit,Digital Gold - GoodBurger ,Digital Gold,-382636
+14/12/24,Credit,ETFs - Tyrell Group,ETFs,124123
+15/02/24,UPI,REITs - Cogswell Inc,REITs,1367571
+15/03/24,Credit,Digital Gold - PiedPiper ,Digital Gold,3191489
+15/04/24,Credit,P2P - Carl Scott,P2P,18603
+15/04/24,Debit,Digital Insurance - EvilCorp. Inc,Digital Insurance,-595083
+15/05/24,UPI,Mutual Funds - Globex Inc,Mutual Funds,19037
+15/06/24,Debit,P2P - Shane Coleman,P2P,-17625
+15/07/24,Credit,Mutual Funds - Umbrella LLC,Mutual Funds,40536
+15/07/24,Debit,Digital Gold - Tyrell LLC,Digital Gold,-498228
+15/07/24,UPI,Lifestyle - Weyland Group,Lifestyle,20467
+15/09/24,Debit,P2P - Miles Torres,P2P,-9468
+15/11/24,Credit,Mutual Funds - Spacely Inc,Mutual Funds,35987
+16/01/24,UPI,ETFs - Primatech Group,ETFs,711614
+16/02/24,Debit,Digital Insurance - Tyrell ,Digital Insurance,-862836
+16/03/24,UPI,ETFs - MomCorp Group,ETFs,349956
+16/05/24,Credit,Medical Bills - Duff Inc,Medical Bills,416677
+16/05/24,UPI,ETFs - Yoyodyne LLC,ETFs,905093
+16/07/24,Debit,Lifestyle - Primatech LLC,Lifestyle,-27821
+16/09/24,Debit,Digital Insurance - Wayne Ltd.,Digital Insurance,-376555
+17/03/24,UPI,Bonds - GoodBurger Ltd.,Bonds,771254
+17/03/24,Debit,Mutual Funds - AnkhMorpork Ltd.,Mutual Funds,-37402
+17/03/24,Debit,Bonds - Illusions Inc,Bonds,-271849
+17/05/24,UPI,Medical Bills - Nakatomi ,Medical Bills,478373
+17/08/24,Credit,Mutual Funds - Yoyodyne ,Mutual Funds,7813
+17/08/24,Credit,Medical Bills - Duff Group,Medical Bills,393018
+17/10/24,UPI,Mutual Funds - Globex LLC,Mutual Funds,40564
+17/10/24,Credit,Lifestyle - Spacely Inc,Lifestyle,37152
+17/10/24,UPI,Bonds - Initech ,Bonds,208403
+18/01/24,UPI,Bonds - GoodBurger Ltd.,Bonds,286669
+18/04/24,Debit,Digital Insurance - Cogswell Inc,Digital Insurance,-443904
+18/07/24,Credit,ETFs - Oceanic LLC,ETFs,854918
+18/09/24,UPI,Mutual Funds - Wayne Inc,Mutual Funds,62735
+18/12/24,Credit,Medical Bills - Zaibatsu ,Medical Bills,497864
+19/01/24,Credit,ETFs - Massive ,ETFs,243715
+19/03/24,UPI,Medical Bills - Primatech ,Medical Bills,181732
+19/04/24,UPI,Mutual Funds - MomCorp Inc,Mutual Funds,63275
+19/04/24,Debit,REITs - Rekall Group,REITs,-1929292
+19/05/24,Credit,P2P - Nico Gilbert,P2P,154
+19/08/24,Credit,REITs - Umbrella Group,REITs,1592678
+19/08/24,UPI,Bonds - Virtucon Group,Bonds,639020
+20/04/24,UPI,REITs - LexCorp Group,REITs,1189712
+20/04/24,UPI,Bonds - BuyNLarge ,Bonds,747130
+20/06/24,Debit,REITs - Weyland LLC,REITs,-1687693
+20/07/24,Credit,P2P - Juan Reyes,P2P,4256
+20/08/24,Credit,ETFs - Rekall Inc,ETFs,78936
+20/08/24,Debit,Digital Insurance - Nakatomi Ltd.,Digital Insurance,-180178
+20/10/24,Credit,P2P - Frank Castillo,P2P,13911
+20/11/24,Debit,Mutual Funds - Oceanic ,Mutual Funds,-64816
+21/01/24,UPI,Lifestyle - EvilCorp. Group,Lifestyle,33720
+21/01/24,Debit,REITs - Cyberdyne LLC,REITs,-724213
+21/01/24,Credit,ETFs - Oscorp Inc,ETFs,209237
+21/01/24,Credit,P2P - Ernest Reynolds,P2P,19513
+21/05/24,Credit,ETFs - PiedPiper Ltd.,ETFs,152383
+21/05/24,Credit,Digital Gold - OmniCorp Group,Digital Gold,849814
+21/05/24,Debit,ETFs - Gekko LLC,ETFs,-797104
+21/06/24,Credit,P2P - Lucas Gray,P2P,4673
+21/06/24,Credit,Bonds - Wayne Ltd.,Bonds,339379
+21/07/24,Credit,P2P - Brian Jenkins,P2P,2441
+21/08/24,UPI,Lifestyle - Nakatomi Group,Lifestyle,24770
+22/01/24,Credit,Bonds - Wonka Ltd.,Bonds,87349
+22/01/24,Debit,Digital Insurance - Spacely LLC,Digital Insurance,-750376
+22/01/24,Credit,P2P - Martin Kim,P2P,11391
+22/02/24,Debit,REITs - EvilCorp. Ltd.,REITs,-1301959
+22/02/24,UPI,Digital Gold - Tyrell Inc,Digital Gold,7492274
+22/03/24,UPI,REITs - Duff Inc,REITs,1884312
+22/03/24,Credit,Medical Bills - Tyrell ,Medical Bills,18938
+22/04/24,Debit,ETFs - Globex Ltd.,ETFs,-56414
+22/04/24,Debit,Digital Gold - Spacely Group,Digital Gold,-7651719
+22/04/24,UPI,Lifestyle - Nakatomi LLC,Lifestyle,42786
+22/07/24,Debit,Digital Insurance - Tyrell ,Digital Insurance,-132695
+22/08/24,Credit,Bonds - Gringotts Ltd.,Bonds,320199
+22/08/24,Debit,P2P - Scott Cox,P2P,-11093
+22/09/24,Debit,P2P - Fred Howard,P2P,-8571
+22/11/24,UPI,Digital Gold - Globex ,Digital Gold,5363477
+22/12/24,UPI,Bonds - AnkhMorpork Inc,Bonds,762802
+23/01/24,Debit,Medical Bills - Umbrella ,Medical Bills,-388313
+23/02/24,UPI,ETFs - Wonka LLC,ETFs,244744
+23/07/24,Credit,ETFs - Wayne Ltd.,ETFs,345908
+23/10/24,Credit,REITs - LexCorp ,REITs,1646507
+23/10/24,Debit,Mutual Funds - Initech Inc,Mutual Funds,-28501
+23/11/24,Credit,Lifestyle - Illusions Inc,Lifestyle,15055
+24/01/24,UPI,Medical Bills - Spacely ,Medical Bills,448293
+24/01/24,UPI,REITs - Zaibatsu ,REITs,361854
+24/01/24,Debit,Mutual Funds - Rekall ,Mutual Funds,-35970
+24/03/24,UPI,Bonds - Gadgetron LLC,Bonds,39386
+24/04/24,UPI,Lifestyle - Primatech ,Lifestyle,12648
+24/07/24,Credit,P2P - Timothy Torres,P2P,7396
+24/08/24,Credit,Digital Gold - LexCorp Group,Digital Gold,8422586
+24/10/24,UPI,ETFs - LexCorp Group,ETFs,495449
+24/10/24,UPI,REITs - BuyNLarge Inc,REITs,468545
+24/10/24,Credit,Lifestyle - Gringotts LLC,Lifestyle,29723
+24/12/24,Debit,Digital Insurance - Fizzbin Group,Digital Insurance,-771470
+25/01/24,Credit,Lifestyle - Wayne Group,Lifestyle,38193
+25/01/24,Debit,Mutual Funds - Krusty LLC,Mutual Funds,-44343
+25/01/24,Debit,P2P - Joe Brooks,P2P,-15596
+25/03/24,UPI,Digital Insurance - Monsters ,Digital Insurance,903595
+25/04/24,Credit,Lifestyle - GoodBurger LLC,Lifestyle,45100
+25/04/24,Credit,Medical Bills - Octan Ltd.,Medical Bills,310155
+25/05/24,UPI,Digital Insurance - Krusty Inc,Digital Insurance,580712
+25/07/24,UPI,Mutual Funds - Cogswell Group,Mutual Funds,39445
+25/07/24,Credit,P2P - Juan Bennett,P2P,15993
+25/08/24,UPI,Bonds - Aperture Group,Bonds,143191
+25/09/24,UPI,Bonds - Rekall Inc,Bonds,550708
+25/10/24,UPI,ETFs - Wayne ,ETFs,252464
+25/11/24,UPI,Digital Insurance - OmniCorp Inc,Digital Insurance,507109
+25/12/24,Debit,Lifestyle - AnkhMorpork Inc,Lifestyle,-28503
+26/01/24,Debit,REITs - Wonka Ltd.,REITs,-842645
+26/03/24,Credit,Bonds - Krusty LLC,Bonds,200568
+26/04/24,UPI,Digital Insurance - Massive Inc,Digital Insurance,672559
+26/05/24,Credit,Mutual Funds - Octan Ltd.,Mutual Funds,50152
+26/06/24,UPI,Medical Bills - Globex Group,Medical Bills,122525
+26/06/24,Debit,Bonds - Initech LLC,Bonds,-737227
+26/07/24,Credit,REITs - Vandelay Ltd.,REITs,553382
+26/08/24,Debit,Bonds - EvilCorp. ,Bonds,-756711
+26/10/24,Debit,ETFs - Fizzbin Ltd.,ETFs,-874099
+26/11/24,Credit,ETFs - Umbrella Inc,ETFs,715424
+26/11/24,Credit,ETFs - PiedPiper Ltd.,ETFs,157467
+26/12/24,Credit,Bonds - Rekall Ltd.,Bonds,591773
+26/12/24,Credit,Bonds - Renraku Ltd.,Bonds,70142
+27/01/24,Credit,Lifestyle - GoodBurger ,Lifestyle,25427
+27/04/24,Debit,Mutual Funds - Stark Inc,Mutual Funds,-32210
+27/05/24,UPI,Bonds - GoodBurger Inc,Bonds,83617
+27/06/24,UPI,Bonds - Chum Ltd.,Bonds,510241
+27/06/24,Debit,Lifestyle - Octan LLC,Lifestyle,-1004
+27/07/24,UPI,ETFs - Monsters Ltd.,ETFs,482227
+27/08/24,Debit,Digital Insurance - Kahuna LLC,Digital Insurance,-445079
+27/09/24,Credit,Lifestyle - Umbrella Inc,Lifestyle,8778
+27/10/24,Debit,Digital Insurance - Umbrella ,Digital Insurance,-637306
+27/12/24,Debit,Lifestyle - Cyberdyne Inc,Lifestyle,-1403
+28/02/24,Credit,P2P - Thomas Ramos,P2P,1470
+28/03/24,UPI,Mutual Funds - BuyNLarge LLC,Mutual Funds,24994
+28/08/24,Debit,REITs - Cogswell ,REITs,-991325
+28/08/24,Debit,Digital Gold - Weyland Ltd.,Digital Gold,-7711344
+28/08/24,UPI,Bonds - Renraku Group,Bonds,405116
+28/08/24,Credit,Medical Bills - OmniCorp ,Medical Bills,146250
+28/09/24,Credit,Digital Gold - Rekall Inc,Digital Gold,2957662
+28/09/24,UPI,Digital Gold - Aperture Ltd.,Digital Gold,4997559
+28/10/24,Debit,Lifestyle - Spacely Inc,Lifestyle,-44938
+28/11/24,Credit,Lifestyle - Stark ,Lifestyle,39351
+29/02/24,UPI,ETFs - Duff Ltd.,ETFs,590731
+29/04/24,Debit,Lifestyle - Yoyodyne Group,Lifestyle,-46169
+29/05/24,Debit,P2P - Alex Jimenez,P2P,-4433
+30/01/24,Credit,REITs - Nakatomi Inc,REITs,1859032
+30/04/24,UPI,Lifestyle - Kahuna Inc,Lifestyle,45366
+30/06/24,Credit,Lifestyle - Primatech Inc,Lifestyle,30935
+30/06/24,Debit,P2P - Miles Allen,P2P,-4527
+30/08/24,Credit,REITs - Octan Group,REITs,575203
+30/10/24,UPI,Mutual Funds - Hooli ,Mutual Funds,49550
+30/12/24,UPI,Medical Bills - Stark ,Medical Bills,408208
+30/12/24,Debit,Digital Gold - Vandelay LLC,Digital Gold,-7838770
+31/03/24,Credit,Bonds - Chum Inc,Bonds,622675
+31/05/24,UPI,Lifestyle - PiedPiper Inc,Lifestyle,20057
+31/07/24,Debit,Mutual Funds - Umbrella Ltd.,Mutual Funds,-64857
+31/07/24,Credit,REITs - MomCorp Ltd.,REITs,1803318
+31/10/24,Credit,P2P - Joe Wells,P2P,24490
+31/10/24,Credit,Bonds - Octan Ltd.,Bonds,235690
+31/12/24,UPI,REITs - Illusions LLC,REITs,822226
+31/12/24,Debit,Mutual Funds - Vandelay LLC,Mutual Funds,-91639
+31/12/24,UPI,Lifestyle - AnkhMorpork Group,Lifestyle,13004
