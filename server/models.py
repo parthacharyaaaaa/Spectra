@@ -5,7 +5,7 @@ from sqlalchemy.types import INTEGER, BOOLEAN, DATETIME, VARCHAR, NUMERIC
 from datetime import datetime
 
 class Audio_Entity(db.Model):
-    __tablename__ = "video_requests"
+    __tablename__ = "audio_entities"
 
     id = db.Column(INTEGER, nullable = False)
     uuid = db.Column(VARCHAR(128), nullable = False)
@@ -23,13 +23,14 @@ class Audio_Entity(db.Model):
 
     # Storage metadata
     in_disk = db.Column(BOOLEAN, default = True)
+    in_hitlist = db.Column(BOOLEAN, nullable=False)
     time_added = db.Column(DATETIME, nullable = False)
     time_removed = db.Column(DATETIME, nullable = True)
 
     __table_args__ = (
-        PrimaryKeyConstraint(id, name="pk_video_requests"),
-        Index("idx_video_requests_uuid", uuid),
-        UniqueConstraint(uuid, name="uqx_video_requests_uuid"),
+        PrimaryKeyConstraint(id, name="pk_audio_entities"),
+        Index("idx_audio_entities_uuid", uuid),
+        UniqueConstraint(uuid, name="uqx_audio_entities_uuid"),
     )
 
     def __init__(self, filename: str, url: str, audio_length: float, context_tag: str | None = None, context_text: str | None = None, in_disk: bool = True, time_added=None):
