@@ -9,6 +9,8 @@ from server.auxillary.utils import *
 from sqlalchemy import select, insert, delete
 from sqlalchemy.exc import SQLAlchemyError
 
+from assemblyai.types import Word
+
 from traceback import format_exc
 from uuid import uuid4
 from time import time
@@ -103,4 +105,21 @@ def processVideo(video_id : str) -> Response:
     except:
         raise InternalServerError("Failed to extract transcript from audio")
     
-    
+    sentences : list[dict] = []
+    breakpoints : list[str] = [".", ",", "?", "!", "-"]
+    transcriptIterator : int = 0
+    iteratorLimit : int = len(transcript)
+
+    while(transcriptIterator < iteratorLimit):
+        initIdx = transcriptIterator
+        startWord : float | int = transcript[transcriptIterator]
+        duration : float = 0
+
+        while(duration <= 15):
+            transcriptIterator += 1
+            duration += transcript[transcriptIterator].end - transcript[transcriptIterator].start
+
+            if transcript[transcriptIterator].text[-1] in breakpoints:
+                break
+        
+    sentences.append({"start" : startWord.start, "end" : startWord.start + duration, "duration" : duration, "text" : " ".join(list(map(lambda x : x.text, transcript[initIdx:transcriptIterator+1])))})
