@@ -1,5 +1,5 @@
 from server import db
-from sqlalchemy import PrimaryKeyConstraint, Index
+from sqlalchemy import PrimaryKeyConstraint, Index, UniqueConstraint
 from sqlalchemy.types import INTEGER, BOOLEAN, DATETIME, VARCHAR, NUMERIC
 
 from datetime import datetime
@@ -8,6 +8,7 @@ class Video_Request(db.Model):
     __tablename__ = "video_requests"
 
     id = db.Column(INTEGER, nullable = False)
+    uuid = db.Column(VARCHAR(128), nullable = False)
 
     # File related metadata
     filename = db.Column(VARCHAR(128), nullable = False)
@@ -27,6 +28,8 @@ class Video_Request(db.Model):
 
     __table_args__ = (
         PrimaryKeyConstraint(id, name="pk_video_requests"),
+        Index("idx_video_requests_uuid", uuid),
+        UniqueConstraint(uuid, name="uqx_video_requests_uuid"),
     )
 
     def __init__(self, filename: str, url: str, video_length: float, context_tag: str | None = None, context_text: str | None = None, in_disk: bool = True, time_added=None):
