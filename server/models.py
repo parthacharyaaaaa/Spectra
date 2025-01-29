@@ -4,7 +4,7 @@ from sqlalchemy.types import INTEGER, BOOLEAN, DATETIME, VARCHAR, NUMERIC
 
 from datetime import datetime
 
-class Video_Request(db.Model):
+class Audio_Entity(db.Model):
     __tablename__ = "video_requests"
 
     id = db.Column(INTEGER, nullable = False)
@@ -14,8 +14,8 @@ class Video_Request(db.Model):
     filename = db.Column(VARCHAR(128), nullable = False)
 
     # Video metadata
-    video_url = db.Column(VARCHAR(2048), nullable=False)
-    video_length = db.Column(NUMERIC(5, 2), nullable = False)
+    url = db.Column(VARCHAR(2048), nullable=False)
+    audio_length = db.Column(NUMERIC(5, 2), nullable = False)
 
     # Video context for LLM
     context_tag = db.Column(VARCHAR(16), nullable = True)
@@ -32,10 +32,10 @@ class Video_Request(db.Model):
         UniqueConstraint(uuid, name="uqx_video_requests_uuid"),
     )
 
-    def __init__(self, filename: str, url: str, video_length: float, context_tag: str | None = None, context_text: str | None = None, in_disk: bool = True, time_added=None):
+    def __init__(self, filename: str, url: str, audio_length: float, context_tag: str | None = None, context_text: str | None = None, in_disk: bool = True, time_added=None):
         self.filename = filename
-        self.video_url = url
-        self.video_length = video_length
+        self.url = url
+        self.audio_length = audio_length
         self.context_tag = context_tag
         self.context_text = context_text
         self.in_disk = in_disk
