@@ -34,13 +34,7 @@ class AppConfig:
         SUPPORTED_VIDEO_FORMATS = os.environ["SUPPORTED_VIDEO_FORMATS"].split(",")
         MAX_VIDEO_SIZE = int(os.environ["MAX_VIDEO_SIZE"])
 
-        REQUIRE_REDIS = bool(int(os.environ["REQUIRE_REDIS"]))
-        REDIS_HOST = os.environ.get("REDIS_HOST")
-        REDIS_PORT = int(os.environ.get("REDIS_PORT"))
-
-        if REQUIRE_REDIS and not (REDIS_HOST and REDIS_PORT):
-            raise ValueError("REQUIRE_REDIS set to True, but mandatory args not found")
-
+        AAI_API_KEY = os.environ["AAI_API_KEY"]
 
         GENERIC_HTTP_MESSAGES : dict = {2 : "Success",
                                         3 : "Redirection",
