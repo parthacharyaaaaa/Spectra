@@ -5,11 +5,10 @@ from werkzeug.exceptions import InternalServerError, HTTPException, BadRequest, 
 
 from server.auxillary.decorators import *
 from server.auxillary.utils import *
+from server.auxillary.utils_llm import *
 
 from sqlalchemy import select, insert, delete
 from sqlalchemy.exc import SQLAlchemyError
-
-from assemblyai.types import Word
 
 from traceback import format_exc
 from uuid import uuid4
@@ -116,10 +115,15 @@ def processVideo(video_id : str) -> Response:
         duration : float = 0
 
         while(duration <= 15):
-            transcriptIterator += 1
             duration += transcript[transcriptIterator].end - transcript[transcriptIterator].start
+            transcriptIterator += 1
 
             if transcript[transcriptIterator].text[-1] in breakpoints:
                 break
         
-    sentences.append({"start" : startWord.start, "end" : startWord.start + duration, "duration" : duration, "text" : " ".join(list(map(lambda x : x.text, transcript[initIdx:transcriptIterator+1])))})
+    sentences.append({"start" : startWord.start, "end" : startWord.start + duration, "duration" : duration, "text" : " ".join(word.text for word in transcript[initIdx:transcriptIterator+1])})
+
+    fullTranscript : str = " ".join(word.text for word in transcript)
+
+    result = segment_and_summarize(fullTranscript, sentences)
+    return jsonify(result), 200
