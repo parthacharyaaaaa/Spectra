@@ -31,6 +31,9 @@ class AppConfig:
         SQLALCHEMY_DATABASE_URI = "sqlite:///{DB_URI}".format(DB_URI=os.environ["SQLALCHEMY_DB_URI"])
         SQLALCHEMY_TRACK_MODIFICATIONS = os.environ.get("DB_TRACK_MODIFICATIONS", False)
 
+        SUPPORTED_VIDEO_FORMATS = os.environ["SUPPORTED_VIDEO_FORMATS"].split(",")
+        MAX_VIDEO_SIZE = int(os.environ["MAX_VIDEO_SIZE"])
+
         REQUIRE_REDIS = bool(int(os.environ["REQUIRE_REDIS"]))
         REDIS_HOST = os.environ.get("REDIS_HOST")
         REDIS_PORT = int(os.environ.get("REDIS_PORT"))
