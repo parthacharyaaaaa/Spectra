@@ -1,7 +1,7 @@
 from server import app, db
 from server.models import Video_Request
 from flask import jsonify, request, Response
-from werkzeug.exceptions import InternalServerError, HTTPException, BadRequest
+from werkzeug.exceptions import InternalServerError, HTTPException, BadRequest, NotFound
 
 from server.auxillary.decorators import *
 from server.auxillary.utils import *
@@ -30,7 +30,7 @@ def generic_error_handler(e : Exception):
 ### Endpoints ###
 @app.route("/videos", methods=["POST"])
 @validate_video
-def processVideo() -> Response:
+def storeVideo() -> Response:
     ### Block to persist video temporarily to disk ###
     try:
         filename : str = f"{g.VIDEO_FILE.split('.')[0] or int(time())}_{uuid4().hex}.{g.FTYPE}"
@@ -81,4 +81,26 @@ def processVideo() -> Response:
                     "epoch" : epoch.strftime("%H:%M:%S, %d/%m/%y"),
                     "message" : "Video saved succesfully"}), 201
 
+    
+@app.route("/videos/<str:video_id>/process", methods=["GET", "HEAD"])
+def processVideo(video_id : str) -> Response:
+    videoRequest : Video_Request = db.session.execute(select(Video_Request).where(Video_Request.id == video_id)).scalar_one_or_none()
+    if not videoRequest:
+        raise NotFound(f"Video with id {video_id} could not be found")
+    
+    absFilepath : os.PathLike = os.path.join(app.static_folder, videoRequest.filename)
+    videoLength : float = getVideoLength(absFilepath)
+    if videoLength == 0:
+        videoLength = getVideoLength_WithMoviePy(absFilepath)
+
+    try:
+        absAudioFilepath : os.PathLike = extract_audio_pydub(absFilepath, os.path.join(app.static_folder, videoRequest.filename+".mp3"))
+    except:
+        raise InternalServerError("Failed to extract audio")
+
+    try:
+        transcript = getAssemblyAITranscript(absAudioFilepath, app.config["AAI_API_KEY"], True)
+    except:
+        raise InternalServerError("Failed to extract transcript from audio")
+    
     
