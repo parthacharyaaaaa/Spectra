@@ -11,9 +11,9 @@ class Video_Request(db.Model):
 
     # File related metadata
     filename = db.Column(VARCHAR(128), nullable = False)
-    filetype = db.Column(VARCHAR(8), nullable = False)
 
     # Video metadata
+    video_url = db.Column(VARCHAR(2048), nullable=False)
     video_length = db.Column(NUMERIC(5, 2), nullable = False)
 
     # Video context for LLM
@@ -26,12 +26,12 @@ class Video_Request(db.Model):
     time_removed = db.Column(DATETIME, nullable = True)
 
     __table_args__ = (
-        PrimaryKeyConstraint(id, name="pk_video_requests")
+        PrimaryKeyConstraint(id, name="pk_video_requests"),
     )
 
-    def __init__(self, filename: str, filetype: str, video_length: float, context_tag: str | None = None, context_text: str | None = None, in_disk: bool = True, time_added=None):
+    def __init__(self, filename: str, url: str, video_length: float, context_tag: str | None = None, context_text: str | None = None, in_disk: bool = True, time_added=None):
         self.filename = filename
-        self.filetype = filetype
+        self.video_url = url
         self.video_length = video_length
         self.context_tag = context_tag
         self.context_text = context_text
