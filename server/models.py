@@ -41,3 +41,4 @@ class Audio_Entity(db.Model):
         self.context_text = context_text
         self.in_disk = in_disk
         self.time_added = time_added or datetime.now()
+        self.in_hitlist=False

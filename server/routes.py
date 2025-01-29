@@ -1,13 +1,14 @@
 from server import app, db
-from server.models import Video_Request
+from server.models import Audio_Entity
 from flask import jsonify, request, Response
 from werkzeug.exceptions import InternalServerError, HTTPException, BadRequest, NotFound
+from moviepy import CompositeVideoClip
 
 from server.auxillary.decorators import *
 from server.auxillary.utils import *
 from server.auxillary.utils_llm import *
 
-from sqlalchemy import select, insert, delete
+from sqlalchemy import select, insert, update
 from sqlalchemy.exc import SQLAlchemyError
 
 from traceback import format_exc
@@ -29,24 +30,30 @@ def generic_error_handler(e : Exception):
     return response, getattr(e, "code", 500)
 
 ### Endpoints ###
-@app.route("/videos", methods=["POST"])
-@validate_video
+@app.route("/urls", methods=["POST"])
+# @validate_video
+@enforce_JSON
 def storeVideo() -> Response:
     ### Block to persist video temporarily to disk ###
+    if "url" not in g.REQUEST_JSON:
+        raise BadRequest("url missing")
     try:
-        filename : str = f"{g.VIDEO_FILE.split('.')[0] or int(time())}_{uuid4().hex}.{g.FTYPE}"
+        url : str = g.REQUEST_JSON["url"]
+        uuid = uuid4().hex
+        filename : str = f"{int(time())}_{uuid}"
         absFilepath : os.PathLike = os.path.join(app.static_folder, filename)
-        g.VIDEO_FILE.save(absFilepath)
+
+        print(absFilepath)
+        download_youtube_video_mp3(url, absFilepath)
+        download_youtube_video_mp4(url, absFilepath)
         epoch : datetime = datetime.now()
     except:
         raise InternalServerError("Failed to save video file. This may be an issue with video encoding")
 
-    ### Block to extract video metadata ###
-    videoLength : float = getVideoLength(absFilepath)
-    if videoLength == 0:
-        videoLength = getVideoLength_WithMoviePy(absFilepath)
-    if not videoLength or videoLength == 0:
-        raise InternalServerError("Video encoding error, please change the encoding to a more mainstream encoder")
+    ### Block to extract audio metadata ###
+    audioLength : float = getAudioLength(absFilepath+".mp3")
+    if audioLength == 0:
+        raise InternalServerError("Video/Audio encoding error, please change the encoding to a more mainstream encoder")
     
     additionalResponseKwargs : dict = {}
     try:
@@ -63,14 +70,16 @@ def storeVideo() -> Response:
                 if context_text[idx] in symbolsList:
                     context_text = context_text[:idx]
         
-        db.session.execute(insert(Video_Request).values(filename=filename.split(".")[0],
-                                                        filetype=g.FTYPE,
-                                                        video_length=videoLength,
+        db.session.execute(insert(Audio_Entity).values(filename=filename,
+                                                        uuid=uuid,
+                                                        url=url,
+                                                        audio_length=audioLength,
                                                         context_tag=context_tag,
                                                         context_text=context_text,
                                                         in_disk=True,
                                                         time_added=epoch,
-                                                        time_removed=None))
+                                                        time_removed=None,
+                                                        in_hitlist=False))
         db.session.commit()
         
     except SQLAlchemyError:
@@ -79,51 +88,68 @@ def storeVideo() -> Response:
         raise BadRequest("Invalid data sent via ctx_tags or ctx_text")
 
     return jsonify({"filename" : filename,
+                    "id" : uuid,
                     "epoch" : epoch.strftime("%H:%M:%S, %d/%m/%y"),
                     "message" : "Video saved succesfully"}), 201
 
     
-@app.route("/videos/<str:video_id>/process", methods=["GET", "HEAD"])
+@app.route("/videos/<string:video_id>/process", methods=["GET", "HEAD"])
 def processVideo(video_id : str) -> Response:
-    videoRequest : Video_Request = db.session.execute(select(Video_Request).where(Video_Request.id == video_id)).scalar_one_or_none()
-    if not videoRequest:
+    requestedAudio : Audio_Entity = db.session.execute(select(Audio_Entity).where(Audio_Entity.uuid == video_id)).scalar_one_or_none()
+    if not requestedAudio:
         raise NotFound(f"Video with id {video_id} could not be found")
     
-    absFilepath : os.PathLike = os.path.join(app.static_folder, videoRequest.filename)
-    videoLength : float = getVideoLength(absFilepath)
-    if videoLength == 0:
-        videoLength = getVideoLength_WithMoviePy(absFilepath)
-
+    absFilepath : os.PathLike = os.path.join(app.static_folder, requestedAudio.filename+".mp3")
     try:
-        absAudioFilepath : os.PathLike = extract_audio_pydub(absFilepath, os.path.join(app.static_folder, videoRequest.filename+".mp3"))
-    except:
-        raise InternalServerError("Failed to extract audio")
-
-    try:
-        transcript = getAssemblyAITranscript(absAudioFilepath, app.config["AAI_API_KEY"], True)
+        transcript = getAssemblyAITranscript(absFilepath, app.config["AAI_API_KEY"], False)
     except:
         raise InternalServerError("Failed to extract transcript from audio")
-    
-    sentences : list[dict] = []
-    breakpoints : list[str] = [".", ",", "?", "!", "-"]
-    transcriptIterator : int = 0
-    iteratorLimit : int = len(transcript)
+    print(len(transcript))
+    print(transcript[-1].end // 1000)
 
-    while(transcriptIterator < iteratorLimit):
-        initIdx = transcriptIterator
-        startWord : float | int = transcript[transcriptIterator]
-        duration : float = 0
+    sentences = " ".join(x.text for x in transcript).split(".")[:-1]
 
-        while(duration <= 15):
-            duration += transcript[transcriptIterator].end - transcript[transcriptIterator].start
-            transcriptIterator += 1
+    sentecesWithTimestamps = []
+    transcriptIterator = 0
+    print(sentences)
+    for sentence in sentences:
+        sentecesWithTimestamps.append({"text" : sentence.strip(),
+                                       "start" : transcript[transcriptIterator].start / 1000,
+                                       "end" : transcript[transcriptIterator+len(sentence.split())-1].end / 1000})
+        transcriptIterator += len(sentence.split())-1
 
-            if transcript[transcriptIterator].text[-1] in breakpoints:
+    mergedSentences = []
+    dictIterator = 0
+
+    while dictIterator < len(sentecesWithTimestamps):
+        breakpoints : list = []
+        mergedSentence = sentecesWithTimestamps[dictIterator]["text"]
+        start = sentecesWithTimestamps[dictIterator]["start"]
+        end = sentecesWithTimestamps[dictIterator]["end"]
+        currentDuration = end - start
+
+        while dictIterator + 1 < len(sentecesWithTimestamps) and currentDuration < 15:
+            nextSegment = sentecesWithTimestamps[dictIterator + 1]
+            breakpoints.append(nextSegment["start"])
+            nextDuration = nextSegment["end"] - nextSegment["start"]
+
+            if currentDuration + nextDuration <= 15:
+                mergedSentence += ". " + nextSegment["text"]
+                currentDuration += nextDuration
+                dictIterator += 1
+                end = nextSegment["end"]
+            else:
                 break
-        
-    sentences.append({"start" : startWord.start, "end" : startWord.start + duration, "duration" : duration, "text" : " ".join(word.text for word in transcript[initIdx:transcriptIterator+1])})
 
-    fullTranscript : str = " ".join(word.text for word in transcript)
+        mergedSentences.append({"text": mergedSentence, "start": start, "end": end, "breakpoints" : breakpoints})
 
-    result = segment_and_summarize(fullTranscript, sentences)
-    return jsonify(result), 200
+        dictIterator += 1
+
+    newDir = os.path.join(app.static_folder, f"{video_id}_{int(time())}")
+    os.mkdir(newDir)
+    for index, entry in enumerate(mergedSentences):
+        clip : CompositeVideoClip = makeVideoSubclipWithCaptions(entry["text"].split("."), entry["start"], VideoFileClip("temps/1738156231_357729e9881d456bb9b79f9e92ecb117.mp4"), entry["breakpoints"])
+        clip.write_videofile(os.path.join(newDir, video_id+f"{index}.mp4"), codec = "libx264", audio_codec = "aac")
+
+    
+    return mergedSentences, 200

@@ -6,6 +6,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 CWD = os.path.dirname(__file__)
 
+HIT_DIRECTORY : os.PathLike = os.path.join(os.path.dirname(CWD), os.environ["STATIC_DIR_NAME"])
 
 output = load_dotenv(dotenv_path=os.path.join(os.path.dirname(CWD), '.env'),
                 verbose=True)
@@ -40,7 +41,13 @@ if __name__ == "__main__":
         ### Begin job ###
         while attempt < MAX_ATTEMPTS:
             try:
-                db_cursor.execute("DELETE FROM audio_entities WHERE in_hitlist = true;")
+                db_cursor.execute("SELECT filename FROM audio_entities WHERE in_hitlist = true;")
+                deathrow : list[tuple] = db_cursor.fetchall()
+
+                for file in deathrow:
+                    os.remove(os.path.join(HIT_DIRECTORY, file+".mp3"))
+                
+                db_cursor.execute("UPDATE audio_entities SET in_disk = false, time_deleted = ? WHERE in_hitlist = true", (datetime.now()))
                 conn.commit()
                 print(f"[{attempt}] Hit(s) succesful")
                 failed = False
