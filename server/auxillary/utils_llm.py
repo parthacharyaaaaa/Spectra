@@ -20,5 +20,5 @@ def segment_and_summarize(transcript : str, sentences : list[dict]):
     Segment 2 (12s - 20s): Summary of the second segment.
     """
 
-    response = ollama.chat(model="mistral", messages=[{"role": "user", "content": prompt}])
+    response = ollama.chat(model="llama2", messages=[{"role": "user", "content": prompt}])
     return response["message"]["content"]
